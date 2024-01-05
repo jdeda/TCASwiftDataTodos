@@ -80,6 +80,7 @@ struct AppReducer {
         return .none
         
       case .editTodosButtonTapped:
+        state.focus = nil
         state.isEditingTodos = true
         return .none
         

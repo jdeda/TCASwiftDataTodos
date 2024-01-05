@@ -202,5 +202,18 @@ final class AppReducerTests: XCTestCase {
       $0.isEditingTodos = false
       $0.selectedTodos = []
     }
+    
+    await store.send(.binding(.set(\.focus, .todo(todoC.id)))) {
+      $0.focus = .todo(todoC.id)
+    }
+    
+    await store.send(.editTodosButtonTapped) {
+      $0.isEditingTodos = true
+      $0.focus = nil
+    }
+    
+    await store.send(.editTodosDoneButtonTapped) {
+      $0.isEditingTodos = false
+    }
   }
 }

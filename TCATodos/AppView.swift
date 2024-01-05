@@ -27,6 +27,7 @@ struct AppView: View {
         .onDelete { store.send(.todoSwipedToDelete($0), animation: .default) }
         .onMove { store.send(.todoMoved($0, $1), animation: .default) }
         .deleteDisabled(!store.isEditingTodos)
+        .disabled(store.isEditingTodos)
       }
       .navigationTitle("Todos")
       .synchronize($store.focus, $focus)
@@ -89,6 +90,7 @@ extension AppView {
         } label: {
           Text("Delete")
         }
+        .disabled(store.selectedTodos.isEmpty)
       }
       else {
         Text("\(store.todos.count) todos")
