@@ -7,22 +7,50 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		97A414592B476D4B00EB5FC7 /* TCATodosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414582B476D4B00EB5FC7 /* TCATodosApp.swift */; };
-		97A4145B2B476D4B00EB5FC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A4145A2B476D4B00EB5FC7 /* ContentView.swift */; };
+		97A414592B476D4B00EB5FC7 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414582B476D4B00EB5FC7 /* Main.swift */; };
 		97A4145D2B476D4D00EB5FC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97A4145C2B476D4D00EB5FC7 /* Assets.xcassets */; };
 		97A414602B476D4D00EB5FC7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97A4145F2B476D4D00EB5FC7 /* Preview Assets.xcassets */; };
+		97A414682B476E8400EB5FC7 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 97A414672B476E8400EB5FC7 /* ComposableArchitecture */; };
+		97A4146B2B476EB700EB5FC7 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 97A4146A2B476EB700EB5FC7 /* Tagged */; };
+		97A4146D2B476EEF00EB5FC7 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A4146C2B476EEF00EB5FC7 /* AppView.swift */; };
+		97A4146F2B476EFB00EB5FC7 /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A4146E2B476EFB00EB5FC7 /* AppReducer.swift */; };
+		97A414712B476F4A00EB5FC7 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414702B476F4A00EB5FC7 /* Model.swift */; };
+		97A414862B477BEF00EB5FC7 /* AppReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		97A414872B477BEF00EB5FC7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97A4144D2B476D4B00EB5FC7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 97A414542B476D4B00EB5FC7;
+			remoteInfo = TCATodos;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		97A414552B476D4B00EB5FC7 /* TCATodos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCATodos.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		97A414582B476D4B00EB5FC7 /* TCATodosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCATodosApp.swift; sourceTree = "<group>"; };
-		97A4145A2B476D4B00EB5FC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		97A414582B476D4B00EB5FC7 /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		97A4145C2B476D4D00EB5FC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97A4145F2B476D4D00EB5FC7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		97A4146C2B476EEF00EB5FC7 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
+		97A4146E2B476EFB00EB5FC7 /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducer.swift; sourceTree = "<group>"; };
+		97A414702B476F4A00EB5FC7 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		97A414832B477BEF00EB5FC7 /* TCATodosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TCATodosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		97A414522B476D4B00EB5FC7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97A4146B2B476EB700EB5FC7 /* Tagged in Frameworks */,
+				97A414682B476E8400EB5FC7 /* ComposableArchitecture in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		97A414802B477BEF00EB5FC7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -36,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				97A414572B476D4B00EB5FC7 /* TCATodos */,
+				97A414842B477BEF00EB5FC7 /* TCATodosTests */,
 				97A414562B476D4B00EB5FC7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -44,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				97A414552B476D4B00EB5FC7 /* TCATodos.app */,
+				97A414832B477BEF00EB5FC7 /* TCATodosTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -51,8 +81,10 @@
 		97A414572B476D4B00EB5FC7 /* TCATodos */ = {
 			isa = PBXGroup;
 			children = (
-				97A414582B476D4B00EB5FC7 /* TCATodosApp.swift */,
-				97A4145A2B476D4B00EB5FC7 /* ContentView.swift */,
+				97A414582B476D4B00EB5FC7 /* Main.swift */,
+				97A4146C2B476EEF00EB5FC7 /* AppView.swift */,
+				97A4146E2B476EFB00EB5FC7 /* AppReducer.swift */,
+				97A414702B476F4A00EB5FC7 /* Model.swift */,
 				97A4145C2B476D4D00EB5FC7 /* Assets.xcassets */,
 				97A4145E2B476D4D00EB5FC7 /* Preview Content */,
 			);
@@ -65,6 +97,14 @@
 				97A4145F2B476D4D00EB5FC7 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		97A414842B477BEF00EB5FC7 /* TCATodosTests */ = {
+			isa = PBXGroup;
+			children = (
+				97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */,
+			);
+			path = TCATodosTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,9 +123,31 @@
 			dependencies = (
 			);
 			name = TCATodos;
+			packageProductDependencies = (
+				97A414672B476E8400EB5FC7 /* ComposableArchitecture */,
+				97A4146A2B476EB700EB5FC7 /* Tagged */,
+			);
 			productName = TCATodos;
 			productReference = 97A414552B476D4B00EB5FC7 /* TCATodos.app */;
 			productType = "com.apple.product-type.application";
+		};
+		97A414822B477BEF00EB5FC7 /* TCATodosTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 97A414892B477BEF00EB5FC7 /* Build configuration list for PBXNativeTarget "TCATodosTests" */;
+			buildPhases = (
+				97A4147F2B477BEF00EB5FC7 /* Sources */,
+				97A414802B477BEF00EB5FC7 /* Frameworks */,
+				97A414812B477BEF00EB5FC7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				97A414882B477BEF00EB5FC7 /* PBXTargetDependency */,
+			);
+			name = TCATodosTests;
+			productName = TCATodosTests;
+			productReference = 97A414832B477BEF00EB5FC7 /* TCATodosTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -100,6 +162,10 @@
 					97A414542B476D4B00EB5FC7 = {
 						CreatedOnToolsVersion = 15.1;
 					};
+					97A414822B477BEF00EB5FC7 = {
+						CreatedOnToolsVersion = 15.1;
+						TestTargetID = 97A414542B476D4B00EB5FC7;
+					};
 				};
 			};
 			buildConfigurationList = 97A414502B476D4B00EB5FC7 /* Build configuration list for PBXProject "TCATodos" */;
@@ -111,11 +177,16 @@
 				Base,
 			);
 			mainGroup = 97A4144C2B476D4B00EB5FC7;
+			packageReferences = (
+				97A414662B476E8400EB5FC7 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				97A414692B476EB700EB5FC7 /* XCRemoteSwiftPackageReference "swift-tagged" */,
+			);
 			productRefGroup = 97A414562B476D4B00EB5FC7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				97A414542B476D4B00EB5FC7 /* TCATodos */,
+				97A414822B477BEF00EB5FC7 /* TCATodosTests */,
 			);
 		};
 /* End PBXProject section */
@@ -130,6 +201,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		97A414812B477BEF00EB5FC7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -137,12 +215,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				97A4145B2B476D4B00EB5FC7 /* ContentView.swift in Sources */,
-				97A414592B476D4B00EB5FC7 /* TCATodosApp.swift in Sources */,
+				97A4146F2B476EFB00EB5FC7 /* AppReducer.swift in Sources */,
+				97A4146D2B476EEF00EB5FC7 /* AppView.swift in Sources */,
+				97A414592B476D4B00EB5FC7 /* Main.swift in Sources */,
+				97A414712B476F4A00EB5FC7 /* Model.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		97A4147F2B477BEF00EB5FC7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97A414862B477BEF00EB5FC7 /* AppReducerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		97A414882B477BEF00EB5FC7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 97A414542B476D4B00EB5FC7 /* TCATodos */;
+			targetProxy = 97A414872B477BEF00EB5FC7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		97A414612B476D4D00EB5FC7 /* Debug */ = {
@@ -322,6 +418,42 @@
 			};
 			name = Release;
 		};
+		97A4148A2B477BEF00EB5FC7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LK58S58FC7;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jdeda.TCATodosTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TCATodos.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TCATodos";
+			};
+			name = Debug;
+		};
+		97A4148B2B477BEF00EB5FC7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LK58S58FC7;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jdeda.TCATodosTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TCATodos.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TCATodos";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -343,7 +475,48 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		97A414892B477BEF00EB5FC7 /* Build configuration list for PBXNativeTarget "TCATodosTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				97A4148A2B477BEF00EB5FC7 /* Debug */,
+				97A4148B2B477BEF00EB5FC7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		97A414662B476E8400EB5FC7 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture.git";
+			requirement = {
+				branch = "observation-beta";
+				kind = branch;
+			};
+		};
+		97A414692B476EB700EB5FC7 /* XCRemoteSwiftPackageReference "swift-tagged" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-tagged.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		97A414672B476E8400EB5FC7 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 97A414662B476E8400EB5FC7 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		97A4146A2B476EB700EB5FC7 /* Tagged */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 97A414692B476EB700EB5FC7 /* XCRemoteSwiftPackageReference "swift-tagged" */;
+			productName = Tagged;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97A4144D2B476D4B00EB5FC7 /* Project object */;
 }
