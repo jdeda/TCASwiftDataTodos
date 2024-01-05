@@ -5,7 +5,6 @@ import ComposableArchitecture
 
 @MainActor
 final class AppReducerTests: XCTestCase {
-  
   func testTodoIsCompleteToggled1() async {
     let todoA = Todo(id: .init(), isComplete: true, description: "A")
     let todoB = Todo(id: .init(), isComplete: true, description: "B")

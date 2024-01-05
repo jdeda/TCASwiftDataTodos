@@ -16,6 +16,8 @@
 		97A4146F2B476EFB00EB5FC7 /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A4146E2B476EFB00EB5FC7 /* AppReducer.swift */; };
 		97A414712B476F4A00EB5FC7 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414702B476F4A00EB5FC7 /* Model.swift */; };
 		97A414862B477BEF00EB5FC7 /* AppReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */; };
+		97A4148F2B488A9D00EB5FC7 /* TodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A4148E2B488A9D00EB5FC7 /* TodoView.swift */; };
+		97A414912B488AA100EB5FC7 /* TodoReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414902B488AA100EB5FC7 /* TodoReducer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +40,8 @@
 		97A414702B476F4A00EB5FC7 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		97A414832B477BEF00EB5FC7 /* TCATodosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TCATodosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducerTests.swift; sourceTree = "<group>"; };
+		97A4148E2B488A9D00EB5FC7 /* TodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoView.swift; sourceTree = "<group>"; };
+		97A414902B488AA100EB5FC7 /* TodoReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoReducer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,8 +86,8 @@
 			isa = PBXGroup;
 			children = (
 				97A414582B476D4B00EB5FC7 /* Main.swift */,
-				97A4146C2B476EEF00EB5FC7 /* AppView.swift */,
-				97A4146E2B476EFB00EB5FC7 /* AppReducer.swift */,
+				97A4148C2B488A8900EB5FC7 /* App */,
+				97A4148D2B488A9000EB5FC7 /* Todo */,
 				97A414702B476F4A00EB5FC7 /* Model.swift */,
 				97A4145C2B476D4D00EB5FC7 /* Assets.xcassets */,
 				97A4145E2B476D4D00EB5FC7 /* Preview Content */,
@@ -105,6 +109,24 @@
 				97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */,
 			);
 			path = TCATodosTests;
+			sourceTree = "<group>";
+		};
+		97A4148C2B488A8900EB5FC7 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				97A4146C2B476EEF00EB5FC7 /* AppView.swift */,
+				97A4146E2B476EFB00EB5FC7 /* AppReducer.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		97A4148D2B488A9000EB5FC7 /* Todo */ = {
+			isa = PBXGroup;
+			children = (
+				97A4148E2B488A9D00EB5FC7 /* TodoView.swift */,
+				97A414902B488AA100EB5FC7 /* TodoReducer.swift */,
+			);
+			path = Todo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -217,6 +239,8 @@
 			files = (
 				97A4146F2B476EFB00EB5FC7 /* AppReducer.swift in Sources */,
 				97A4146D2B476EEF00EB5FC7 /* AppView.swift in Sources */,
+				97A414912B488AA100EB5FC7 /* TodoReducer.swift in Sources */,
+				97A4148F2B488A9D00EB5FC7 /* TodoView.swift in Sources */,
 				97A414592B476D4B00EB5FC7 /* Main.swift in Sources */,
 				97A414712B476F4A00EB5FC7 /* Model.swift in Sources */,
 			);

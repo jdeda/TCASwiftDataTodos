@@ -8,22 +8,8 @@ struct AppView: View {
   var body: some View {
     NavigationStack {
       List(selection: $store.selectedTodos) {
-        ForEach(store.todos) { todo in
-          HStack {
-            Button {
-              send(.todoIsCompletedToggled(todo.id), animation: .default)
-            } label: {
-              Image(systemName: todo.isComplete ? "checkmark.square" : "square")
-            }
-            .buttonStyle(.plain)
-            TextField("...", text: .init(
-              get: { todo.description },
-              set: { send(.todoDescriptionEdited(todo.id, $0), animation: .default)})
-            )
-            .focused($focus, equals: .todo(todo.id))
-            Spacer()
-          }
-          .foregroundColor(todo.isComplete ? .secondary : .primary)
+        ForEach(store.scope(state: \.todos, action: \.todos)) { todoStore in
+          TodoView(store: todoStore)
         }
         .onDelete { send(.todoSwipedToDelete($0), animation: .default) }
         .onMove { send(.todoMoved($0, $1), animation: .default) }
@@ -130,7 +116,7 @@ extension View {
 
 #Preview {
   AppView(store: .init(
-    initialState: AppReducer.State(todos: .init(uniqueElements: Array.mockTodos)),
+    initialState: AppReducer.State(todos: Array.mockTodos.mapIdentifiable({.init(todo: $0)})),
     reducer: AppReducer.init
   ))
 }
