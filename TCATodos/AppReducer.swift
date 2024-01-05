@@ -21,18 +21,22 @@ struct AppReducer {
     }
   }
   
-  enum Action: Equatable, BindableAction {
-    case todoDescriptionEdited(Todo.ID, String)
-    case todoIsCompletedToggled(Todo.ID)
-    case todoSwipedToDelete(IndexSet)
-    case todoMoved(IndexSet, Int)
-    case addTodoButtonTapped
-    case deleteCompletedTodosButtonTapped
+  enum Action: Equatable, BindableAction, ViewAction {
+    case view(ViewAction)
+    enum ViewAction: Equatable {
+      case todoDescriptionEdited(Todo.ID, String)
+      case todoIsCompletedToggled(Todo.ID)
+      case todoSwipedToDelete(IndexSet)
+      case todoMoved(IndexSet, Int)
+      case addTodoButtonTapped
+      case deleteCompletedTodosButtonTapped
+      case editTodosButtonTapped
+      case editTodosDoneButtonTapped
+      case selectAllTodosButtonTapped
+      case deleteSelectedTodosButtonTapped
+    }
+    
     case sortTodos
-    case editTodosButtonTapped
-    case editTodosDoneButtonTapped
-    case selectAllTodosButtonTapped
-    case deleteSelectedTodosButtonTapped
     case binding(BindingAction<State>)
   }
   
@@ -45,11 +49,11 @@ struct AppReducer {
     BindingReducer()
     Reduce { state, action in
       switch action {
-      case let .todoDescriptionEdited(id, description):
+      case let .view(.todoDescriptionEdited(id, description)):
         state.todos[id: id]?.description = description
         return .none
         
-      case let .todoIsCompletedToggled(id):
+      case let .view(.todoIsCompletedToggled(id)):
         state.todos[id: id]?.isComplete.toggle()
         return .run { send in
           try await self.clock.sleep(for: .seconds(1))
@@ -57,45 +61,45 @@ struct AppReducer {
         }
         .cancellable(id: SortEffectID.cancel, cancelInFlight: true)
         
-      case let .todoSwipedToDelete(source):
+      case let .view(.todoSwipedToDelete(source)):
         state.todos.remove(atOffsets: source)
         return .none
         
-      case let .todoMoved(source, destination):
+      case let .view(.todoMoved(source, destination)):
         state.todos.move(fromOffsets: source, toOffset: destination)
         return .none
         
-      case .addTodoButtonTapped:
+      case .view(.addTodoButtonTapped):
         let todo = Todo(id: .init(rawValue: uuid()))
         state.todos.append(todo)
         state.focus = .todo(todo.id)
         return .none
         
-      case .deleteCompletedTodosButtonTapped:
+      case .view(.deleteCompletedTodosButtonTapped):
         state.todos = state.todos.filter { !$0.isComplete }
         return .none
         
-      case .sortTodos:
-        state.todos.sort { $1.isComplete && !$0.isComplete }
-        return .none
-        
-      case .editTodosButtonTapped:
+      case .view(.editTodosButtonTapped):
         state.focus = nil
         state.isEditingTodos = true
         return .none
         
-      case .editTodosDoneButtonTapped:
+      case .view(.editTodosDoneButtonTapped):
         state.isEditingTodos = false
         state.selectedTodos = []
         return .none
         
-      case .selectAllTodosButtonTapped:
+      case .view(.selectAllTodosButtonTapped):
         state.selectedTodos = state.hasSelectedAll ? [] : .init(state.todos.map(\.id))
         return .none
         
-      case .deleteSelectedTodosButtonTapped:
+      case .view(.deleteSelectedTodosButtonTapped):
         state.todos = state.todos.filter { !state.selectedTodos.contains($0.id) }
         state.selectedTodos = []
+        return .none
+        
+      case .sortTodos:
+        state.todos.sort { $1.isComplete && !$0.isComplete }
         return .none
         
       case .binding:

@@ -1,6 +1,7 @@
 import SwiftUI
 import ComposableArchitecture
 
+@ViewAction(for: AppReducer.self)
 struct AppView: View {
   @Bindable var store: StoreOf<AppReducer>
   @FocusState var focus: AppReducer.State.Focus?
@@ -10,22 +11,22 @@ struct AppView: View {
         ForEach(store.todos) { todo in
           HStack {
             Button {
-              store.send(.todoIsCompletedToggled(todo.id), animation: .default)
+              send(.todoIsCompletedToggled(todo.id), animation: .default)
             } label: {
               Image(systemName: todo.isComplete ? "checkmark.square" : "square")
             }
             .buttonStyle(.plain)
             TextField("...", text: .init(
               get: { todo.description },
-              set: { store.send(.todoDescriptionEdited(todo.id, $0), animation: .default)})
+              set: { send(.todoDescriptionEdited(todo.id, $0), animation: .default)})
             )
             .focused($focus, equals: .todo(todo.id))
             Spacer()
           }
           .foregroundColor(todo.isComplete ? .secondary : .primary)
         }
-        .onDelete { store.send(.todoSwipedToDelete($0), animation: .default) }
-        .onMove { store.send(.todoMoved($0, $1), animation: .default) }
+        .onDelete { send(.todoSwipedToDelete($0), animation: .default) }
+        .onMove { send(.todoMoved($0, $1), animation: .default) }
         .deleteDisabled(!store.isEditingTodos)
         .disabled(store.isEditingTodos)
       }
@@ -43,7 +44,7 @@ extension AppView {
     ToolbarItemGroup(placement: .navigationBarLeading) {
       if store.isEditingTodos {
         Button {
-          store.send(.selectAllTodosButtonTapped) // Don't use animation looks weird.
+          send(.selectAllTodosButtonTapped) // Don't use animation looks weird.
         } label: {
           Text(store.hasSelectedAll ? "Deselect All" : "Select All")
         }
@@ -52,7 +53,7 @@ extension AppView {
     ToolbarItemGroup(placement: .primaryAction) {
       if store.isEditingTodos {
         Button {
-          store.send(.editTodosDoneButtonTapped, animation: .default)
+          send(.editTodosDoneButtonTapped, animation: .default)
         } label: {
           Text("Done")
         }
@@ -60,17 +61,17 @@ extension AppView {
       else {
         Menu {
           Button {
-            store.send(.addTodoButtonTapped, animation: .default)
+            send(.addTodoButtonTapped, animation: .default)
           } label: {
             Label("Add", systemImage: "plus")
           }
           Button {
-            store.send(.editTodosButtonTapped, animation: .default)
+            send(.editTodosButtonTapped, animation: .default)
           } label: {
             Label("Edit", systemImage: "pencil")
           }
           Button(role: .destructive) {
-            store.send(.deleteCompletedTodosButtonTapped, animation: .default)
+            send(.deleteCompletedTodosButtonTapped, animation: .default)
           } label: {
             Label("Delete Completed", systemImage: "trash")
           }
@@ -86,7 +87,7 @@ extension AppView {
         Text("\(store.todos.count) todos")
         Spacer()
         Button(role: .destructive) {
-          store.send(.deleteSelectedTodosButtonTapped, animation: .default)
+          send(.deleteSelectedTodosButtonTapped, animation: .default)
         } label: {
           Text("Delete")
         }

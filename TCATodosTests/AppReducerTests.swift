@@ -19,23 +19,23 @@ final class AppReducerTests: XCTestCase {
       }
     )
     
-    await store.send(.todoIsCompletedToggled(todoA.id)) {
+    await store.send(.view(.todoIsCompletedToggled(todoA.id))) {
       $0.todos[id: todoA.id]?.isComplete = false
     }
     await clock.advance(by: .milliseconds(500))
-    await store.send(.todoIsCompletedToggled(todoB.id)) {
+    await store.send(.view(.todoIsCompletedToggled(todoB.id))) {
       $0.todos[id: todoB.id]?.isComplete = false
     }
     await clock.advance(by: .milliseconds(500))
-    await store.send(.todoIsCompletedToggled(todoC.id)) {
+    await store.send(.view(.todoIsCompletedToggled(todoC.id))) {
       $0.todos[id: todoC.id]?.isComplete = false
     }
     await clock.advance(by: .milliseconds(500))
-    await store.send(.todoIsCompletedToggled(todoC.id)) {
+    await store.send(.view(.todoIsCompletedToggled(todoC.id))) {
       $0.todos[id: todoC.id]?.isComplete = true
     }
     await clock.advance(by: .milliseconds(500))
-    await store.send(.todoIsCompletedToggled(todoC.id)) {
+    await store.send(.view(.todoIsCompletedToggled(todoC.id))) {
       $0.todos[id: todoC.id]?.isComplete = false
     }
     await clock.advance(by: .milliseconds(1000))
@@ -55,10 +55,10 @@ final class AppReducerTests: XCTestCase {
       }
     )
     
-    await store.send(.todoIsCompletedToggled(todoA.id)) {
+    await store.send(.view(.todoIsCompletedToggled(todoA.id))) {
       $0.todos[id: todoA.id]?.isComplete = true
     }
-    await store.send(.todoIsCompletedToggled(todoC.id)) {
+    await store.send(.view(.todoIsCompletedToggled(todoC.id))) {
       $0.todos[id: todoC.id]?.isComplete = true
     }
     await clock.advance(by: .milliseconds(1000))
@@ -77,20 +77,20 @@ final class AppReducerTests: XCTestCase {
     let todoC = Todo(id: .init(), isComplete: true, description: "C")
     let store = TestStore(initialState: AppReducer.State(todos: [todoA, todoB, todoC]), reducer: AppReducer.init)
     
-    await store.send(.todoDescriptionEdited(todoA.id, "AAA")) {
+    await store.send(.view(.todoDescriptionEdited(todoA.id, "AAA"))) {
       $0.todos[id: todoA.id]?.description = "AAA"
     }
-    await store.send(.todoDescriptionEdited(todoB.id, "BBB")) {
+    await store.send(.view(.todoDescriptionEdited(todoB.id, "BBB"))) {
       $0.todos[id: todoB.id]?.description = "BBB"
     }
-    await store.send(.todoDescriptionEdited(todoC.id, "CCC")) {
+    await store.send(.view(.todoDescriptionEdited(todoC.id, "CCC"))) {
       $0.todos[id: todoC.id]?.description = "CCC"
     }
-    await store.send(.todoDescriptionEdited(todoC.id, "CCC"))
-    await store.send(.todoDescriptionEdited(todoC.id, "CC")) {
+    await store.send(.view(.todoDescriptionEdited(todoC.id, "CCC")))
+    await store.send(.view(.todoDescriptionEdited(todoC.id, "CC"))) {
       $0.todos[id: todoC.id]?.description = "CC"
     }
-    await store.send(.todoDescriptionEdited(todoC.id, "")) {
+    await store.send(.view(.todoDescriptionEdited(todoC.id, ""))) {
       $0.todos[id: todoC.id]?.description = ""
     }
   }
@@ -100,17 +100,17 @@ final class AppReducerTests: XCTestCase {
       $0.uuid = .incrementing
     })
     
-    await store.send(.addTodoButtonTapped) {
+    await store.send(.view(.addTodoButtonTapped)) {
       let todo = Todo(id: .init(rawValue: .init(0)))
       $0.todos.append(todo)
       $0.focus = .todo(todo.id)
     }
-    await store.send(.addTodoButtonTapped) {
+    await store.send(.view(.addTodoButtonTapped)) {
       let todo = Todo(id: .init(rawValue: .init(1)))
       $0.todos.append(todo)
       $0.focus = .todo(todo.id)
     }
-    await store.send(.addTodoButtonTapped) {
+    await store.send(.view(.addTodoButtonTapped)) {
       let todo = Todo(id: .init(rawValue: .init(2)))
       $0.todos.append(todo)
       $0.focus = .todo(todo.id)
@@ -123,7 +123,7 @@ final class AppReducerTests: XCTestCase {
     let todoC = Todo(id: .init(), isComplete: true, description: "C")
     var store = TestStore(initialState: AppReducer.State(todos: [todoA, todoB, todoC]), reducer: AppReducer.init)
     
-    await store.send(.deleteCompletedTodosButtonTapped) {
+    await store.send(.view(.deleteCompletedTodosButtonTapped)) {
       $0.todos = []
     }
     
@@ -135,7 +135,7 @@ final class AppReducerTests: XCTestCase {
       ]),
       reducer: AppReducer.init
     )
-    await store.send(.deleteCompletedTodosButtonTapped)
+    await store.send(.view(.deleteCompletedTodosButtonTapped))
     
     store = TestStore(
       initialState: AppReducer.State(todos: [
@@ -146,7 +146,7 @@ final class AppReducerTests: XCTestCase {
       ]),
       reducer: AppReducer.init
     )
-    await store.send(.deleteCompletedTodosButtonTapped) {
+    await store.send(.view(.deleteCompletedTodosButtonTapped)) {
       $0.todos.remove(id: todoB.id)
     }
   }
@@ -157,15 +157,15 @@ final class AppReducerTests: XCTestCase {
     let todoC = Todo(id: .init(), isComplete: true, description: "C")
     var store = TestStore(initialState: AppReducer.State(todos: [todoA, todoB, todoC]), reducer: AppReducer.init)
     
-    await store.send(.editTodosButtonTapped) {
+    await store.send(.view(.editTodosButtonTapped)) {
       $0.isEditingTodos = true
     }
     
-    await store.send(.selectAllTodosButtonTapped) {
+    await store.send(.view(.selectAllTodosButtonTapped)) {
       $0.selectedTodos = .init($0.todos.map(\.id))
     }
     
-    await store.send(.selectAllTodosButtonTapped) {
+    await store.send(.view(.selectAllTodosButtonTapped)) {
       $0.selectedTodos = []
     }
     
@@ -173,7 +173,7 @@ final class AppReducerTests: XCTestCase {
       $0.selectedTodos = [todoA.id]
     }
     
-    await store.send(.selectAllTodosButtonTapped) {
+    await store.send(.view(.selectAllTodosButtonTapped)) {
       $0.selectedTodos = [todoA.id, todoB.id, todoC.id]
     }
     
@@ -181,16 +181,16 @@ final class AppReducerTests: XCTestCase {
       $0.selectedTodos = [todoA.id]
     }
     
-    await store.send(.deleteSelectedTodosButtonTapped) {
+    await store.send(.view(.deleteSelectedTodosButtonTapped)) {
       $0.todos.remove(id: todoA.id)
       $0.selectedTodos = []
     }
     
-    await store.send(.editTodosDoneButtonTapped) {
+    await store.send(.view(.editTodosDoneButtonTapped)) {
       $0.isEditingTodos = false
     }
     
-    await store.send(.editTodosButtonTapped) {
+    await store.send(.view(.editTodosButtonTapped)) {
       $0.isEditingTodos = true
     }
     
@@ -198,7 +198,7 @@ final class AppReducerTests: XCTestCase {
       $0.selectedTodos = [todoB.id, todoC.id]
     }
     
-    await store.send(.editTodosDoneButtonTapped) {
+    await store.send(.view(.editTodosDoneButtonTapped)) {
       $0.isEditingTodos = false
       $0.selectedTodos = []
     }
@@ -207,12 +207,12 @@ final class AppReducerTests: XCTestCase {
       $0.focus = .todo(todoC.id)
     }
     
-    await store.send(.editTodosButtonTapped) {
+    await store.send(.view(.editTodosButtonTapped)) {
       $0.isEditingTodos = true
       $0.focus = nil
     }
     
-    await store.send(.editTodosDoneButtonTapped) {
+    await store.send(.view(.editTodosDoneButtonTapped)) {
       $0.isEditingTodos = false
     }
   }
