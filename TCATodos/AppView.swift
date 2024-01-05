@@ -2,7 +2,8 @@ import SwiftUI
 import ComposableArchitecture
 
 struct AppView: View {
-  let store: StoreOf<AppReducer>
+  @Bindable var store: StoreOf<AppReducer>
+  @FocusState var focus: AppReducer.State.Focus?
   var body: some View {
     NavigationStack {
       List {
@@ -18,6 +19,7 @@ struct AppView: View {
               get: { todo.description },
               set: { store.send(.todoDescriptionEdited(todo.id, $0), animation: .default)})
             )
+            .focused($focus, equals: .todo(todo.id))
             Spacer()
           }
           .foregroundColor(todo.isComplete ? .secondary : .primary)
@@ -26,6 +28,7 @@ struct AppView: View {
         .onMove { store.send(.todoMoved($0, $1), animation: .default) }
       }
       .navigationTitle("Todos")
+      .synchronize($store.focus, $focus)
       .toolbar { toolbar(store: store) }
     }
   }
@@ -55,6 +58,38 @@ extension AppView {
         Image(systemName: "ellipsis.circle")
       }
     }
+    
+    ToolbarItemGroup(placement: .bottomBar) {
+      Text("\(store.todos.count) todos")
+    }
+  }
+}
+
+extension View {
+  func synchronize<Value: Equatable>(
+    _ first: Binding<Value>,
+    _ second: Binding<Value>
+  ) -> some View {
+    self
+      .onChange(of: first.wrappedValue) { old, new in
+        second.wrappedValue = new
+      }
+      .onChange(of: second.wrappedValue) {
+        old, new in first.wrappedValue = new
+      }
+  }
+  
+  func synchronize<Value: Equatable>(
+    _ first: Binding<Value>,
+    _ second: FocusState<Value>.Binding
+  ) -> some View {
+    self
+      .onChange(of: first.wrappedValue) { old, new in
+        second.wrappedValue = new
+      }
+      .onChange(of: second.wrappedValue) {
+        old, new in first.wrappedValue = new
+      }
   }
 }
 

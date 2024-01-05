@@ -6,26 +6,68 @@ import ComposableArchitecture
 @MainActor
 final class AppReducerTests: XCTestCase {
   
-  func testTodoIsCompleteToggled() async {
+  func testTodoIsCompleteToggled1() async {
     let todoA = Todo(id: .init(), isComplete: true, description: "A")
     let todoB = Todo(id: .init(), isComplete: true, description: "B")
     let todoC = Todo(id: .init(), isComplete: true, description: "C")
-    let store = TestStore(initialState: AppReducer.State(todos: [todoA, todoB, todoC]), reducer: AppReducer.init)
+    let clock = TestClock()
+    let store = TestStore(
+      initialState: AppReducer.State(todos: [todoA, todoB, todoC]),
+      reducer: AppReducer.init,
+      withDependencies: {
+        $0.continuousClock = clock
+      }
+    )
     
     await store.send(.todoIsCompletedToggled(todoA.id)) {
       $0.todos[id: todoA.id]?.isComplete = false
     }
+    await clock.advance(by: .milliseconds(500))
     await store.send(.todoIsCompletedToggled(todoB.id)) {
       $0.todos[id: todoB.id]?.isComplete = false
     }
+    await clock.advance(by: .milliseconds(500))
     await store.send(.todoIsCompletedToggled(todoC.id)) {
       $0.todos[id: todoC.id]?.isComplete = false
+    }
+    await clock.advance(by: .milliseconds(500))
+    await store.send(.todoIsCompletedToggled(todoC.id)) {
+      $0.todos[id: todoC.id]?.isComplete = true
+    }
+    await clock.advance(by: .milliseconds(500))
+    await store.send(.todoIsCompletedToggled(todoC.id)) {
+      $0.todos[id: todoC.id]?.isComplete = false
+    }
+    await clock.advance(by: .milliseconds(1000))
+    await store.receive(.sortTodos, timeout: .seconds(1))
+  }
+  
+  func testTodoIsCompleteToggled2() async {
+    let todoA = Todo(id: .init(), isComplete: false, description: "A")
+    let todoB = Todo(id: .init(), isComplete: false, description: "B")
+    let todoC = Todo(id: .init(), isComplete: false, description: "C")
+    let clock = TestClock()
+    let store = TestStore(
+      initialState: AppReducer.State(todos: [todoA, todoB, todoC]),
+      reducer: AppReducer.init,
+      withDependencies: {
+        $0.continuousClock = clock
+      }
+    )
+    
+    await store.send(.todoIsCompletedToggled(todoA.id)) {
+      $0.todos[id: todoA.id]?.isComplete = true
     }
     await store.send(.todoIsCompletedToggled(todoC.id)) {
       $0.todos[id: todoC.id]?.isComplete = true
     }
-    await store.send(.todoIsCompletedToggled(todoC.id)) {
-      $0.todos[id: todoC.id]?.isComplete = false
+    await clock.advance(by: .milliseconds(1000))
+    await store.receive(.sortTodos, timeout: .seconds(1)) {
+      $0.todos = [
+        Todo(id: todoB.id, isComplete: false, description: "B"),
+        Todo(id: todoA.id, isComplete: true, description: "A"),
+        Todo(id: todoC.id, isComplete: true, description: "C")
+      ]
     }
   }
   
@@ -59,13 +101,19 @@ final class AppReducerTests: XCTestCase {
     })
     
     await store.send(.addTodoButtonTapped) {
-      $0.todos.append(.init(id: .init(rawValue: .init(0))))
+      let todo = Todo(id: .init(rawValue: .init(0)))
+      $0.todos.append(todo)
+      $0.focus = .todo(todo.id)
     }
     await store.send(.addTodoButtonTapped) {
-      $0.todos.append(.init(id: .init(rawValue: .init(1))))
+      let todo = Todo(id: .init(rawValue: .init(1)))
+      $0.todos.append(todo)
+      $0.focus = .todo(todo.id)
     }
     await store.send(.addTodoButtonTapped) {
-      $0.todos.append(.init(id: .init(rawValue: .init(2))))
+      let todo = Todo(id: .init(rawValue: .init(2)))
+      $0.todos.append(todo)
+      $0.focus = .todo(todo.id)
     }
   }
   
@@ -94,12 +142,12 @@ final class AppReducerTests: XCTestCase {
         .init(id: todoA.id, isComplete: false, description: todoA.description),
         .init(id: todoB.id, isComplete: true, description: todoB.description),
         .init(id: todoC.id, isComplete: false, description: todoC.description),
-
+        
       ]),
       reducer: AppReducer.init
     )
     await store.send(.deleteCompletedTodosButtonTapped) {
       $0.todos.remove(id: todoB.id)
-    } 
+    }
   }
 }
