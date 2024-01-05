@@ -6,7 +6,7 @@ struct AppView: View {
   @FocusState var focus: AppReducer.State.Focus?
   var body: some View {
     NavigationStack {
-      List {
+      List(selection: $store.selectedTodos) {
         ForEach(store.todos) { todo in
           HStack {
             Button {
@@ -26,9 +26,11 @@ struct AppView: View {
         }
         .onDelete { store.send(.todoSwipedToDelete($0), animation: .default) }
         .onMove { store.send(.todoMoved($0, $1), animation: .default) }
+        .deleteDisabled(!store.isEditingTodos)
       }
       .navigationTitle("Todos")
       .synchronize($store.focus, $focus)
+      .environment(\.editMode, .constant(store.isEditingTodos ? .active : .inactive))
       .toolbar { toolbar(store: store) }
     }
   }
@@ -37,30 +39,60 @@ struct AppView: View {
 extension AppView {
   @ToolbarContentBuilder
   func toolbar(store: StoreOf<AppReducer>) -> some ToolbarContent {
+    ToolbarItemGroup(placement: .navigationBarLeading) {
+      if store.isEditingTodos {
+        Button {
+          store.send(.selectAllTodosButtonTapped) // Don't use animation looks weird.
+        } label: {
+          Text(store.hasSelectedAll ? "Deselect All" : "Select All")
+        }
+      }
+    }
     ToolbarItemGroup(placement: .primaryAction) {
-      Menu {
+      if store.isEditingTodos {
         Button {
-          store.send(.addTodoButtonTapped, animation: .default)
+          store.send(.editTodosDoneButtonTapped, animation: .default)
         } label: {
-          Label("Add", systemImage: "plus")
+          Text("Done")
         }
-        Button {
-          // TODO: ...
+      }
+      else {
+        Menu {
+          Button {
+            store.send(.addTodoButtonTapped, animation: .default)
+          } label: {
+            Label("Add", systemImage: "plus")
+          }
+          Button {
+            store.send(.editTodosButtonTapped, animation: .default)
+          } label: {
+            Label("Edit", systemImage: "pencil")
+          }
+          Button(role: .destructive) {
+            store.send(.deleteCompletedTodosButtonTapped, animation: .default)
+          } label: {
+            Label("Delete Completed", systemImage: "trash")
+          }
         } label: {
-          Label("Edit", systemImage: "pencil")
+          Image(systemName: "ellipsis.circle")
         }
-        Button(role: .destructive) {
-          store.send(.deleteCompletedTodosButtonTapped, animation: .default)
-        } label: {
-          Label("Delete Completed", systemImage: "trash")
-        }
-      } label: {
-        Image(systemName: "ellipsis.circle")
       }
     }
     
     ToolbarItemGroup(placement: .bottomBar) {
-      Text("\(store.todos.count) todos")
+      if store.isEditingTodos {
+        Spacer()
+        Text("\(store.todos.count) todos")
+        Spacer()
+        Button(role: .destructive) {
+          store.send(.deleteSelectedTodosButtonTapped, animation: .default)
+        } label: {
+          Text("Delete")
+        }
+      }
+      else {
+        Text("\(store.todos.count) todos")
+      }
     }
   }
 }

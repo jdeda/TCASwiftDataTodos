@@ -150,4 +150,57 @@ final class AppReducerTests: XCTestCase {
       $0.todos.remove(id: todoB.id)
     }
   }
+  
+  func testEditDeleteTodos() async {
+    let todoA = Todo(id: .init(), isComplete: true, description: "A")
+    let todoB = Todo(id: .init(), isComplete: true, description: "B")
+    let todoC = Todo(id: .init(), isComplete: true, description: "C")
+    var store = TestStore(initialState: AppReducer.State(todos: [todoA, todoB, todoC]), reducer: AppReducer.init)
+    
+    await store.send(.editTodosButtonTapped) {
+      $0.isEditingTodos = true
+    }
+    
+    await store.send(.selectAllTodosButtonTapped) {
+      $0.selectedTodos = .init($0.todos.map(\.id))
+    }
+    
+    await store.send(.selectAllTodosButtonTapped) {
+      $0.selectedTodos = []
+    }
+    
+    await store.send(.binding(.set(\.selectedTodos, [todoA.id]))) {
+      $0.selectedTodos = [todoA.id]
+    }
+    
+    await store.send(.selectAllTodosButtonTapped) {
+      $0.selectedTodos = [todoA.id, todoB.id, todoC.id]
+    }
+    
+    await store.send(.binding(.set(\.selectedTodos, [todoA.id]))) {
+      $0.selectedTodos = [todoA.id]
+    }
+    
+    await store.send(.deleteSelectedTodosButtonTapped) {
+      $0.todos.remove(id: todoA.id)
+      $0.selectedTodos = []
+    }
+    
+    await store.send(.editTodosDoneButtonTapped) {
+      $0.isEditingTodos = false
+    }
+    
+    await store.send(.editTodosButtonTapped) {
+      $0.isEditingTodos = true
+    }
+    
+    await store.send(.binding(.set(\.selectedTodos, [todoB.id, todoC.id]))) {
+      $0.selectedTodos = [todoB.id, todoC.id]
+    }
+    
+    await store.send(.editTodosDoneButtonTapped) {
+      $0.isEditingTodos = false
+      $0.selectedTodos = []
+    }
+  }
 }

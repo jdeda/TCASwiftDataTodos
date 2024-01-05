@@ -6,12 +6,18 @@ struct AppReducer {
   @ObservableState
   struct State: Equatable {
     var todos = IdentifiedArrayOf<Todo>()
+    var selectedTodos = Set<Todo.ID>()
+    var isEditingTodos = false
     
     var focus = Focus?.none
     @CasePathable
     @dynamicMemberLookup
     enum Focus: Equatable, Hashable {
       case todo(Todo.ID)
+    }
+    
+    var hasSelectedAll: Bool {
+      self.selectedTodos.count == self.todos.count
     }
   }
   
@@ -23,6 +29,10 @@ struct AppReducer {
     case addTodoButtonTapped
     case deleteCompletedTodosButtonTapped
     case sortTodos
+    case editTodosButtonTapped
+    case editTodosDoneButtonTapped
+    case selectAllTodosButtonTapped
+    case deleteSelectedTodosButtonTapped
     case binding(BindingAction<State>)
   }
   
@@ -32,6 +42,7 @@ struct AppReducer {
   enum SortEffectID: Hashable { case cancel }
   
   var body: some ReducerOf<Self> {
+    BindingReducer()
     Reduce { state, action in
       switch action {
       case let .todoDescriptionEdited(id, description):
@@ -66,6 +77,24 @@ struct AppReducer {
         
       case .sortTodos:
         state.todos.sort { $1.isComplete && !$0.isComplete }
+        return .none
+        
+      case .editTodosButtonTapped:
+        state.isEditingTodos = true
+        return .none
+        
+      case .editTodosDoneButtonTapped:
+        state.isEditingTodos = false
+        state.selectedTodos = []
+        return .none
+        
+      case .selectAllTodosButtonTapped:
+        state.selectedTodos = state.hasSelectedAll ? [] : .init(state.todos.map(\.id))
+        return .none
+        
+      case .deleteSelectedTodosButtonTapped:
+        state.todos = state.todos.filter { !state.selectedTodos.contains($0.id) }
+        state.selectedTodos = []
         return .none
         
       case .binding:
