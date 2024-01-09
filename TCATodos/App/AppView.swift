@@ -33,37 +33,6 @@ struct AppView: View {
   }
 }
 
-//@ViewAction(for: AppReducer.self)
-//struct AppView: View {
-//  @Bindable var store: StoreOf<AppReducer>
-//  @FocusState var focus: AppReducer.State.Focus?
-//  var body: some View {
-//    NavigationStack {
-//      Group {
-//        if store.loadStatus != .didLoad {
-//          ProgressView()
-//        }
-//        else {
-//          List(selection: $store.selectedTodos) {
-//            ForEach(store.scope(state: \.todos, action: \.todos)) { todoStore in
-//              TodoView(store: todoStore)
-//            }
-////            .onDelete { send(.todoSwipedToDelete($0), animation: .default) }
-////            .onMove { send(.todoMoved($0, $1), animation: .default) }
-////            .deleteDisabled(store.isEditingTodos)
-////            .disabled(store.isEditingTodos)
-//          }
-//        }
-//      }
-//      .toolbar { toolbar(store: store) }
-//      .navigationTitle("Todos")
-//      .synchronize($store.focus, $focus)
-//      .environment(\.editMode, .constant(store.isEditingTodos ? .active : .inactive))
-//      .task { await send(.task, animation: .default).finish() }
-//    }
-//  }
-//}
-
 extension AppView {
   @ToolbarContentBuilder
   func toolbar(store: StoreOf<AppReducer>) -> some ToolbarContent {
