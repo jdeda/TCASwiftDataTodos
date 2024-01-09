@@ -34,7 +34,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "97A414752B4775F400EB5FC7"
+               BlueprintIdentifier = "97A414822B477BEF00EB5FC7"
                BuildableName = "TCATodosTests.xctest"
                BlueprintName = "TCATodosTests"
                ReferencedContainer = "container:TCATodos.xcodeproj">

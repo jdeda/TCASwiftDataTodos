@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9780EDE02B4D9B5C0093376A /* TodoReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9780EDDF2B4D9B5C0093376A /* TodoReducerTests.swift */; };
 		97A414592B476D4B00EB5FC7 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414582B476D4B00EB5FC7 /* Main.swift */; };
 		97A4145D2B476D4D00EB5FC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97A4145C2B476D4D00EB5FC7 /* Assets.xcassets */; };
 		97A414602B476D4D00EB5FC7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97A4145F2B476D4D00EB5FC7 /* Preview Assets.xcassets */; };
@@ -31,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9780EDDF2B4D9B5C0093376A /* TodoReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoReducerTests.swift; sourceTree = "<group>"; };
 		97A414552B476D4B00EB5FC7 /* TCATodos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCATodos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97A414582B476D4B00EB5FC7 /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		97A4145C2B476D4D00EB5FC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */,
+				9780EDDF2B4D9B5C0093376A /* TodoReducerTests.swift */,
 			);
 			path = TCATodosTests;
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9780EDE02B4D9B5C0093376A /* TodoReducerTests.swift in Sources */,
 				97A414862B477BEF00EB5FC7 /* AppReducerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
