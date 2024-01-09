@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		9780EDE02B4D9B5C0093376A /* TodoReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9780EDDF2B4D9B5C0093376A /* TodoReducerTests.swift */; };
+		9780EDE52B4DA1780093376A /* SDClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9780EDE42B4DA1780093376A /* SDClient.swift */; };
+		9780EDE72B4DA5480093376A /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9780EDE62B4DA5480093376A /* Database.swift */; };
+		9780EDE92B4DB1640093376A /* Database+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9780EDE82B4DB1640093376A /* Database+Live.swift */; };
+		9780EDEB2B4DB16A0093376A /* Database+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9780EDEA2B4DB16A0093376A /* Database+Preview.swift */; };
 		97A414592B476D4B00EB5FC7 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414582B476D4B00EB5FC7 /* Main.swift */; };
 		97A4145D2B476D4D00EB5FC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97A4145C2B476D4D00EB5FC7 /* Assets.xcassets */; };
 		97A414602B476D4D00EB5FC7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97A4145F2B476D4D00EB5FC7 /* Preview Assets.xcassets */; };
@@ -15,7 +19,7 @@
 		97A4146B2B476EB700EB5FC7 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 97A4146A2B476EB700EB5FC7 /* Tagged */; };
 		97A4146D2B476EEF00EB5FC7 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A4146C2B476EEF00EB5FC7 /* AppView.swift */; };
 		97A4146F2B476EFB00EB5FC7 /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A4146E2B476EFB00EB5FC7 /* AppReducer.swift */; };
-		97A414712B476F4A00EB5FC7 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414702B476F4A00EB5FC7 /* Model.swift */; };
+		97A414712B476F4A00EB5FC7 /* Model+Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414702B476F4A00EB5FC7 /* Model+Todo.swift */; };
 		97A414862B477BEF00EB5FC7 /* AppReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */; };
 		97A4148F2B488A9D00EB5FC7 /* TodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A4148E2B488A9D00EB5FC7 /* TodoView.swift */; };
 		97A414912B488AA100EB5FC7 /* TodoReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414902B488AA100EB5FC7 /* TodoReducer.swift */; };
@@ -33,13 +37,17 @@
 
 /* Begin PBXFileReference section */
 		9780EDDF2B4D9B5C0093376A /* TodoReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoReducerTests.swift; sourceTree = "<group>"; };
+		9780EDE42B4DA1780093376A /* SDClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDClient.swift; sourceTree = "<group>"; };
+		9780EDE62B4DA5480093376A /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
+		9780EDE82B4DB1640093376A /* Database+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Database+Live.swift"; sourceTree = "<group>"; };
+		9780EDEA2B4DB16A0093376A /* Database+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Database+Preview.swift"; sourceTree = "<group>"; };
 		97A414552B476D4B00EB5FC7 /* TCATodos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCATodos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97A414582B476D4B00EB5FC7 /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		97A4145C2B476D4D00EB5FC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97A4145F2B476D4D00EB5FC7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		97A4146C2B476EEF00EB5FC7 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		97A4146E2B476EFB00EB5FC7 /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducer.swift; sourceTree = "<group>"; };
-		97A414702B476F4A00EB5FC7 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		97A414702B476F4A00EB5FC7 /* Model+Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Todo.swift"; sourceTree = "<group>"; };
 		97A414832B477BEF00EB5FC7 /* TCATodosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TCATodosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducerTests.swift; sourceTree = "<group>"; };
 		97A4148E2B488A9D00EB5FC7 /* TodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoView.swift; sourceTree = "<group>"; };
@@ -66,6 +74,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9780EDE12B4D9F910093376A /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				9780EDE62B4DA5480093376A /* Database.swift */,
+				9780EDE82B4DB1640093376A /* Database+Live.swift */,
+				9780EDEA2B4DB16A0093376A /* Database+Preview.swift */,
+				9780EDE42B4DA1780093376A /* SDClient.swift */,
+				97A414702B476F4A00EB5FC7 /* Model+Todo.swift */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
 		97A4144C2B476D4B00EB5FC7 = {
 			isa = PBXGroup;
 			children = (
@@ -90,7 +110,7 @@
 				97A414582B476D4B00EB5FC7 /* Main.swift */,
 				97A4148C2B488A8900EB5FC7 /* App */,
 				97A4148D2B488A9000EB5FC7 /* Todo */,
-				97A414702B476F4A00EB5FC7 /* Model.swift */,
+				9780EDE12B4D9F910093376A /* Database */,
 				97A4145C2B476D4D00EB5FC7 /* Assets.xcassets */,
 				97A4145E2B476D4D00EB5FC7 /* Preview Content */,
 			);
@@ -241,11 +261,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				97A4146F2B476EFB00EB5FC7 /* AppReducer.swift in Sources */,
+				9780EDEB2B4DB16A0093376A /* Database+Preview.swift in Sources */,
 				97A4146D2B476EEF00EB5FC7 /* AppView.swift in Sources */,
+				9780EDE92B4DB1640093376A /* Database+Live.swift in Sources */,
 				97A414912B488AA100EB5FC7 /* TodoReducer.swift in Sources */,
 				97A4148F2B488A9D00EB5FC7 /* TodoView.swift in Sources */,
 				97A414592B476D4B00EB5FC7 /* Main.swift in Sources */,
-				97A414712B476F4A00EB5FC7 /* Model.swift in Sources */,
+				97A414712B476F4A00EB5FC7 /* Model+Todo.swift in Sources */,
+				9780EDE72B4DA5480093376A /* Database.swift in Sources */,
+				9780EDE52B4DA1780093376A /* SDClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

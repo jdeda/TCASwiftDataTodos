@@ -5,6 +5,7 @@ import Foundation
 struct AppReducer {
   @ObservableState
   struct State: Equatable {
+    var loadStatus: LoadStatus = .didNotLoad
     var todos = IdentifiedArrayOf<TodoReducer.State>()
     var selectedTodos = Set<Todo.ID>()
     var isEditingTodos = false
@@ -24,6 +25,7 @@ struct AppReducer {
   enum Action: Equatable, BindableAction, ViewAction {
     case view(ViewAction)
     enum ViewAction: Equatable {
+      case task
       case todoSwipedToDelete(IndexSet)
       case todoMoved(IndexSet, Int)
       case addTodoButtonTapped
@@ -34,6 +36,7 @@ struct AppReducer {
       case deleteSelectedTodosButtonTapped
     }
     
+    case loadTodosSuccess([Todo])
     case sortTodos
     case todos(IdentifiedActionOf<TodoReducer>)
     case binding(BindingAction<State>)
@@ -41,6 +44,7 @@ struct AppReducer {
   
   @Dependency(\.uuid) var uuid
   @Dependency(\.continuousClock) var clock
+  @Dependency(\.database) var database
   
   enum SortEffectID: Hashable { case cancel }
   
@@ -48,6 +52,15 @@ struct AppReducer {
     BindingReducer()
     Reduce<AppReducer.State, AppReducer.Action> { state, action in
       switch action {
+      case .view(.task):
+        guard state.loadStatus == .didNotLoad else { return .none }
+        state.loadStatus = .isLoading
+        return .run { send in
+          await self.database.initializeDatabase()
+          let todos = await self.database.retrieveTodos()
+          await send(.loadTodosSuccess(todos), animation: .default)
+        }
+        
       case let .view(.todoSwipedToDelete(source)):
         state.todos.remove(atOffsets: source)
         return .none
@@ -85,18 +98,23 @@ struct AppReducer {
         state.selectedTodos = []
         return .none
         
+      case let .loadTodosSuccess(todos):
+        state.todos = todos.mapIdentifiable({ .init(todo: $0)})
+        state.loadStatus = .didLoad
+        return .none
+        
       case .sortTodos:
         state.todos.sort { $1.todo.isComplete && !$0.todo.isComplete }
         return .none
         
-      case let .todos(.element(id: id, action: .view(.isCompletedToggled))):
+      case .todos(.element(_, action: .view(.isCompletedToggled))):
         return .run { send in
           try await self.clock.sleep(for: .seconds(1))
           await send(.sortTodos, animation: .default)
         }
         .cancellable(id: SortEffectID.cancel, cancelInFlight: true)
         
-      case let .todos(.element(id: id, action: action)):
+      case .todos(.element):
         return .none
         
       case .binding:
@@ -107,4 +125,11 @@ struct AppReducer {
       TodoReducer()
     }
   }
+}
+
+
+enum LoadStatus: Equatable {
+  case didLoad
+  case didNotLoad
+  case isLoading
 }

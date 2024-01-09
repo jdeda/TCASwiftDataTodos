@@ -2,9 +2,55 @@ import XCTest
 @testable import TCATodos
 import ComposableArchitecture
 
-
 @MainActor
 final class AppReducerTests: XCTestCase {
+  
+  func testTask() async {
+    let todoA = Todo(id: .init(), isComplete: true, description: "A")
+    let todoB = Todo(id: .init(), isComplete: true, description: "B")
+    let todoC = Todo(id: .init(), isComplete: true, description: "C")
+    let todos = [todoA, todoB, todoC]
+
+    // No actions should be recieved nor should the DB be called.
+    // (loadStatus == .didLoad)
+    let store1 = TestStore(
+      initialState: AppReducer.State(loadStatus: .didLoad),
+      reducer: AppReducer.init
+    )
+    await store1.send(.view(.task))
+    await store1.finish(timeout: .milliseconds(1))
+    
+    // No actions should be recieved nor should the DB be called.
+    // (loadStatus == .isLoading)
+    let store2 = TestStore(
+      initialState: AppReducer.State(loadStatus: .isLoading),
+      reducer: AppReducer.init
+    )
+    await store2.send(.view(.task))
+    await store2.finish(timeout: .milliseconds(1))
+    
+    // Should be initializing DB and recieve success.
+    let store3 = TestStore(
+      initialState: AppReducer.State(loadStatus: .didNotLoad),
+      reducer: AppReducer.init,
+      withDependencies: {
+        $0.database.initializeDatabase = {
+          // Do nothing.
+        }
+        $0.database.retrieveTodos = {
+          todos
+        }
+      }
+    )
+    await store3.send(.view(.task)) {
+      $0.loadStatus = .isLoading
+    }
+    await store3.receive(.loadTodosSuccess(todos)) {
+      $0.todos = todos.mapIdentifiable({.init(todo: $0)})
+      $0.loadStatus = .didLoad
+    }
+  }
+  
   func testTodoIsCompleteToggled1() async {
     let todoA = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "A"))
     let todoB = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "B"))

@@ -7,20 +7,28 @@ struct AppView: View {
   @FocusState var focus: AppReducer.State.Focus?
   var body: some View {
     NavigationStack {
-      List(selection: $store.selectedTodos) {
-        ForEach(store.scope(state: \.todos, action: \.todos)) { todoStore in
-          TodoView(store: todoStore)
+      Group {
+        if store.loadStatus != .didLoad {
+          ProgressView()
         }
-        .onDelete { send(.todoSwipedToDelete($0), animation: .default) }
-        .onMove { send(.todoMoved($0, $1), animation: .default) }
-        .deleteDisabled(!store.isEditingTodos)
-        .disabled(store.isEditingTodos)
+        else {
+          List(selection: $store.selectedTodos) {
+            ForEach(store.scope(state: \.todos, action: \.todos)) { todoStore in
+              TodoView(store: todoStore)
+            }
+            .onDelete { send(.todoSwipedToDelete($0), animation: .default) }
+            .onMove { send(.todoMoved($0, $1), animation: .default) }
+            .deleteDisabled(store.isEditingTodos)
+            .disabled(store.isEditingTodos)
+          }
+          .navigationTitle("Todos")
+          .synchronize($store.focus, $focus)
+          .environment(\.editMode, .constant(store.isEditingTodos ? .active : .inactive))
+          .toolbar { toolbar(store: store) }
+        }
       }
-      .navigationTitle("Todos")
-      .synchronize($store.focus, $focus)
-      .environment(\.editMode, .constant(store.isEditingTodos ? .active : .inactive))
-      .toolbar { toolbar(store: store) }
     }
+    .task { await send(.task, animation: .default).finish() }
   }
 }
 

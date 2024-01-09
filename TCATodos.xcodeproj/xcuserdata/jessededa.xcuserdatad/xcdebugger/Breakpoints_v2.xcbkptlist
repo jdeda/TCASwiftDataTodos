@@ -3,4 +3,69 @@
    uuid = "3F7D1E34-A6FB-4C4E-B51B-4C800FD007CC"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5F8B910B-B23C-4DAD-B60D-F02DAD1D93A5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TCATodos/App/AppReducer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "5F8B910B-B23C-4DAD-B60D-F02DAD1D93A5 - 27f5091c70732387"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #1 @Sendable (ComposableArchitecture.Send&lt;TCATodos.AppReducer.Action&gt;) async -&gt; () in closure #1 (inout TCATodos.AppReducer.State, TCATodos.AppReducer.Action) -&gt; ComposableArchitecture.Effect&lt;TCATodos.AppReducer.Action&gt; in TCATodos.AppReducer.body.getter : some"
+                  moduleName = "TCATodos"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jessededa/Development/Swift/Demos/TCATodos/TCATodos/App/AppReducer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "68">
+               </Location>
+               <Location
+                  uuid = "5F8B910B-B23C-4DAD-B60D-F02DAD1D93A5 - 251f44621a36aaaf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for closure #1 @Sendable (ComposableArchitecture.Send&lt;TCATodos.AppReducer.Action&gt;) async -&gt; () in closure #1 (inout TCATodos.AppReducer.State, TCATodos.AppReducer.Action) -&gt; ComposableArchitecture.Effect&lt;TCATodos.AppReducer.Action&gt; in TCATodos.AppReducer.body.getter : some"
+                  moduleName = "TCATodos"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jessededa/Development/Swift/Demos/TCATodos/TCATodos/App/AppReducer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "40">
+               </Location>
+               <Location
+                  uuid = "5F8B910B-B23C-4DAD-B60D-F02DAD1D93A5 - cb214a1795d9e785"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #1 @Sendable (ComposableArchitecture.Send&lt;TCATodos.AppReducer.Action&gt;) async -&gt; () in closure #1 (inout TCATodos.AppReducer.State, TCATodos.AppReducer.Action) -&gt; ComposableArchitecture.Effect&lt;TCATodos.AppReducer.Action&gt; in TCATodos.AppReducer.body.getter : some"
+                  moduleName = "TCATodos"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jessededa/Development/Swift/Demos/TCATodos/TCATodos/App/AppReducer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "32">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>
