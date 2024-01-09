@@ -7,11 +7,10 @@ struct AppView: View {
   @FocusState var focus: AppReducer.State.Focus?
   var body: some View {
     NavigationStack {
-      // TODO: Whenever I delete I cannot select an unselected one for some reason until I click one that is selected?
-      // TODO: Test this fancy delete logic
       List(selection: $store.selectedTodos) {
         ForEach(store.scope(state: \.todos, action: \.todos)) { todoStore in
           TodoView(store: todoStore)
+            .focused($focus, equals: .todo(todoStore.todo.id))
             .tag(todoStore.todo.id)
             .swipeActions {
               Button(role: .destructive) {

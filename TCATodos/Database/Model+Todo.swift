@@ -10,18 +10,21 @@ class SDTodo: Identifiable {
   let id: UUID
   var isComplete: Bool
   var description_: String
+  var orderIndex: Int
   
-  init(ID: UUID, isComplete: Bool, description_: String) {
+  init(ID: UUID, isComplete: Bool, description_: String, orderIndex: Int) {
     self.id = ID
     self.isComplete = isComplete
     self.description_ = description_
+    self.orderIndex = orderIndex
   }
   
   convenience init(_ todo: Todo) {
     self.init(
       ID: todo.id.rawValue,
       isComplete: todo.isComplete,
-      description_: todo.description
+      description_: todo.description,
+      orderIndex: todo.orderIndex
     )
   }
 }
@@ -34,18 +37,25 @@ struct Todo: Identifiable, Equatable {
   let id: ID
   var isComplete: Bool
   var description: String
+  var orderIndex: Int
   
-  
-  init(id: ID, isComplete: Bool = false, description: String = "") {
+  init(
+    id: ID,
+    isComplete: Bool = false,
+    description: String = "",
+    orderIndex: Int = 0
+  ) {
     self.id = id
     self.isComplete = isComplete
     self.description = description
+    self.orderIndex = orderIndex
   }
   
   init(_ sdTodo: SDTodo) {
     self.id = .init(rawValue: sdTodo.id)
     self.isComplete = sdTodo.isComplete
     self.description = sdTodo.description_
+    self.orderIndex = sdTodo.orderIndex
   }
 }
 

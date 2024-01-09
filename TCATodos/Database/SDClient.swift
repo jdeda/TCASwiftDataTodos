@@ -45,19 +45,25 @@ actor SDClient: ModelActor {
     fd.fetchLimit = 1
     guard (try? self.modelContext.fetchCount(fd)) == 0 else { return }
     let mockTodos: [Todo] = [
-      .init(id: .init(), isComplete: true, description: "Wakeup"),
-      .init(id: .init(), isComplete: false, description: "Homework"),
-      .init(id: .init(), isComplete: true, description: "Play Videogames"),
-      .init(id: .init(), isComplete: true, description: "Do Keto"),
-      .init(id: .init(), isComplete: false, description: "Go to Bed")
+      Todo(id: .init(), isComplete: true, description: "Wakeup"),
+      Todo(id: .init(), isComplete: false, description: "Homework"),
+      Todo(id: .init(), isComplete: true, description: "Play Videogames"),
+      Todo(id: .init(), isComplete: true, description: "Do Keto"),
+      Todo(id: .init(), isComplete: false, description: "Go to Bed")
     ]
+      .enumerated()
+      .map({
+        var todo = $1
+        todo.orderIndex = $0
+        return todo
+      })
     mockTodos.forEach(self.createTodo)
     try! self.modelContext.save()
     self.didInitStore = true
   }
   
   func retrieveAllTodos() -> [Todo] {
-    var fd = FetchDescriptor<SDTodo>()
+    var fd = FetchDescriptor<SDTodo>(sortBy: [SortDescriptor<SDTodo>(\.orderIndex)])
     fd.fetchLimit = 100
     let todos = (try? self.modelContext.fetch(fd)) ?? []
     return todos.map(Todo.init)
@@ -78,11 +84,12 @@ actor SDClient: ModelActor {
     guard let sdTodo = self._retrieveSDTodo(todo.id.rawValue) else { return }
     sdTodo.isComplete = todo.isComplete
     sdTodo.description_ = todo.description
+    sdTodo.orderIndex = todo.orderIndex
     try! self.modelContext.save()
   }
   
-  func deleteTodo(_ todo: Todo) {
-    guard let sdTodo = self._retrieveSDTodo(todo.id.rawValue) else { return }
+  func deleteTodo(_ id: Todo.ID) {
+    guard let sdTodo = self._retrieveSDTodo(id.rawValue) else { return }
     self.modelContext.delete(sdTodo)
     try! self.modelContext.save()
   }

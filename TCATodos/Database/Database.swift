@@ -12,7 +12,7 @@ struct Database: Sendable, DependencyKey {
   var createTodo: @Sendable (Todo) async -> Void
   var retrieveTodo: @Sendable (Todo.ID) async -> Todo? = { _ in nil }
   var updateTodo: @Sendable (Todo) async -> Void
-  var deleteTodo: @Sendable (Todo) async -> Void
+  var deleteTodo: @Sendable (Todo.ID) async -> Void
 }
 
 extension DependencyValues {

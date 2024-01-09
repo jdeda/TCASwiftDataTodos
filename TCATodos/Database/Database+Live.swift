@@ -21,8 +21,8 @@ extension Database {
       updateTodo: { todo in
         await sdc.updateTodo(todo)
       },
-      deleteTodo: { todo in
-        await sdc.deleteTodo(todo)
+      deleteTodo: { todoID in
+        await sdc.deleteTodo(todoID)
       }
     )
   }()

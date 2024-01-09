@@ -77,19 +77,29 @@ struct AppReducer {
         }
         
       case let .view(.todoSwipedToDelete(id)):
+        let todo = state.todos[id: id]!
         state.todos.remove(id: id)
         state.selectedTodos.remove(id)
-        return .none
+        return .run { _ in
+          await self.database.deleteTodo(todo.id)
+        }
         
       case let .view(.todoMoved(source, destination)):
         state.todos.move(fromOffsets: source, toOffset: destination)
-        return .none
+        let todos = state.todos.map(\.todo)
+        return .run { _ in
+          for todo in todos {
+            await self.database.updateTodo(todo)
+          }
+        }
         
       case .view(.addTodoButtonTapped):
         let todo = Todo(id: .init(rawValue: uuid()))
         state.todos.append(.init(todo: todo))
         state.focus = .todo(todo.id)
-        return .none
+        return .run { _ in
+          await self.database.createTodo(todo)
+        }
         
       case .view(.deleteCompletedTodosButtonTapped):
         guard !state.disabledDeleteCompletedTodosButton else { return .none }
@@ -122,17 +132,27 @@ struct AppReducer {
         
       case .sortTodos:
         state.todos.sort { $1.todo.isComplete && !$0.todo.isComplete }
-        return .none
+        let todos = state.todos.map(\.todo)
+        return .run { _ in
+          for todo in todos {
+            await self.database.updateTodo(todo)
+          }
+        }
         
-      case .todos(.element(_, action: .view(.isCompletedToggled))):
+      case let .todos(.element(id: id, action: .view(.isCompletedToggled))):
+        let todo = state.todos[id: id]!.todo
         return .run { send in
+          await self.database.updateTodo(todo)
           try await self.clock.sleep(for: .seconds(1))
           await send(.sortTodos, animation: .default)
         }
         .cancellable(id: SortEffectID.cancel, cancelInFlight: true)
         
-      case .todos(.element):
-        return .none
+      case let .todos(.element(id: id, _)):
+        let todo = state.todos[id: id]!.todo
+        return .run { _ in
+          await self.database.updateTodo(todo)
+        }
         
       case .binding:
         return .none
@@ -140,15 +160,25 @@ struct AppReducer {
       case let .alert(.presented(action)):
         switch action {
         case .acceptDeleteSelectedTodosButtonTapped:
+          let ids = state.selectedTodos
           state.todos = state.todos.filter { !state.selectedTodos.contains($0.id) }
           state.selectedTodos = []
           state.alert = nil
-          return .none
+          return .run { _ in
+            for id in ids {
+              await self.database.deleteTodo(id)
+            }
+          }
           
         case .acceptDeleteCompletedTodosButtonTapped:
+          let ids = state.todos.filter({ $0.todo.isComplete }).ids
           state.todos = state.todos.filter { !$0.todo.isComplete }
           state.alert = nil
-          return .none
+          return .run { _ in
+            for id in ids {
+              await self.database.deleteTodo(id)
+            }
+          }
         }
         
       case .alert(.dismiss):

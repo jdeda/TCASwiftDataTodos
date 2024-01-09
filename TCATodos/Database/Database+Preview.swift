@@ -27,9 +27,9 @@ extension Database {
         await sdc.initializeDatabase()
         await sdc.updateTodo(todo)
       },
-      deleteTodo: { todo in
+      deleteTodo: { todoID in
         await sdc.initializeDatabase()
-        await sdc.deleteTodo(todo)
+        await sdc.deleteTodo(todoID)
       }
     )
   }()
