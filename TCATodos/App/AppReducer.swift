@@ -26,7 +26,7 @@ struct AppReducer {
     case view(ViewAction)
     enum ViewAction: Equatable {
       case task
-      case todoSwipedToDelete(IndexSet)
+      case todoSwipedToDelete(Todo.ID)
       case todoMoved(IndexSet, Int)
       case addTodoButtonTapped
       case deleteCompletedTodosButtonTapped
@@ -61,8 +61,9 @@ struct AppReducer {
           await send(.loadTodosSuccess(todos), animation: .default)
         }
         
-      case let .view(.todoSwipedToDelete(source)):
-        state.todos.remove(atOffsets: source)
+      case let .view(.todoSwipedToDelete(id)):
+        state.todos.remove(id: id)
+        state.selectedTodos.remove(id)
         return .none
         
       case let .view(.todoMoved(source, destination)):

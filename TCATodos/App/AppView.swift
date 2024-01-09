@@ -7,30 +7,62 @@ struct AppView: View {
   @FocusState var focus: AppReducer.State.Focus?
   var body: some View {
     NavigationStack {
-      Group {
-        if store.loadStatus != .didLoad {
-          ProgressView()
-        }
-        else {
-          List(selection: $store.selectedTodos) {
-            ForEach(store.scope(state: \.todos, action: \.todos)) { todoStore in
-              TodoView(store: todoStore)
+      // TODO: Whenever I delete I cannot select an unselected one for some reason until I click one that is selected?
+      // TODO: Test this fancy delete logic
+      List(selection: $store.selectedTodos) {
+        ForEach(store.scope(state: \.todos, action: \.todos)) { todoStore in
+          TodoView(store: todoStore)
+            .tag(todoStore.todo.id)
+            .swipeActions {
+              Button(role: .destructive) {
+                send(.todoSwipedToDelete(todoStore.id), animation: .default)
+              } label: {
+                Image(systemName: "trash")
+              }
             }
-            .onDelete { send(.todoSwipedToDelete($0), animation: .default) }
-            .onMove { send(.todoMoved($0, $1), animation: .default) }
-            .deleteDisabled(store.isEditingTodos)
-            .disabled(store.isEditingTodos)
-          }
-          .navigationTitle("Todos")
-          .synchronize($store.focus, $focus)
-          .environment(\.editMode, .constant(store.isEditingTodos ? .active : .inactive))
-          .toolbar { toolbar(store: store) }
         }
+        .onMove { send(.todoMoved($0, $1), animation: .default) }
+        .disabled(store.isEditingTodos)
       }
+      .toolbar { toolbar(store: store) }
+      .navigationTitle("Todos")
+      .synchronize($store.focus, $focus)
+      .environment(\.editMode, .constant(store.isEditingTodos ? .active : .inactive))
+      .task { await send(.task, animation: .default).finish() }
     }
-    .task { await send(.task, animation: .default).finish() }
   }
 }
+
+//@ViewAction(for: AppReducer.self)
+//struct AppView: View {
+//  @Bindable var store: StoreOf<AppReducer>
+//  @FocusState var focus: AppReducer.State.Focus?
+//  var body: some View {
+//    NavigationStack {
+//      Group {
+//        if store.loadStatus != .didLoad {
+//          ProgressView()
+//        }
+//        else {
+//          List(selection: $store.selectedTodos) {
+//            ForEach(store.scope(state: \.todos, action: \.todos)) { todoStore in
+//              TodoView(store: todoStore)
+//            }
+////            .onDelete { send(.todoSwipedToDelete($0), animation: .default) }
+////            .onMove { send(.todoMoved($0, $1), animation: .default) }
+////            .deleteDisabled(store.isEditingTodos)
+////            .disabled(store.isEditingTodos)
+//          }
+//        }
+//      }
+//      .toolbar { toolbar(store: store) }
+//      .navigationTitle("Todos")
+//      .synchronize($store.focus, $focus)
+//      .environment(\.editMode, .constant(store.isEditingTodos ? .active : .inactive))
+//      .task { await send(.task, animation: .default).finish() }
+//    }
+//  }
+//}
 
 extension AppView {
   @ToolbarContentBuilder

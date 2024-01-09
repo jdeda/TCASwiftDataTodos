@@ -10,7 +10,7 @@ final class AppReducerTests: XCTestCase {
     let todoB = Todo(id: .init(), isComplete: true, description: "B")
     let todoC = Todo(id: .init(), isComplete: true, description: "C")
     let todos = [todoA, todoB, todoC]
-
+    
     // No actions should be recieved nor should the DB be called.
     // (loadStatus == .didLoad)
     let store1 = TestStore(
@@ -50,6 +50,45 @@ final class AppReducerTests: XCTestCase {
       $0.loadStatus = .didLoad
     }
   }
+  
+  func testTodoSwipedToDelete() async {
+    let todoA = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "A"))
+    let todoB = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "B"))
+    let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C"))
+    let store = TestStore(
+      initialState: AppReducer.State(todos: [todoA, todoB, todoC]),
+      reducer: AppReducer.init
+    )
+    
+    await store.send(.view(.todoSwipedToDelete(todoA.id))) {
+      $0.todos.remove(id: todoA.id)
+    }
+    
+    await store.send(.view(.todoSwipedToDelete(todoB.id))) {
+      $0.todos.remove(id: todoB.id)
+    }
+    
+    await store.send(.view(.todoSwipedToDelete(todoB.id)))
+    
+    await store.send(.view(.todoSwipedToDelete(todoC.id))) {
+      $0.todos = []
+    }
+  }
+  
+  func testTodoMoved() async {
+    let todoA = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "A"))
+    let todoB = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "B"))
+    let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C"))
+    let store = TestStore(
+      initialState: AppReducer.State(todos: [todoA, todoB, todoC]),
+      reducer: AppReducer.init
+    )
+    
+    await store.send(.view(.todoMoved(IndexSet(integersIn: 0..<1), 2))) {
+      $0.todos = [todoB, todoA, todoC]
+    }
+  }
+  
   
   func testTodoIsCompleteToggled1() async {
     let todoA = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "A"))
@@ -205,7 +244,7 @@ final class AppReducerTests: XCTestCase {
     let todoA = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "A"))
     let todoB = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "B"))
     let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C"))
-    var store = TestStore(
+    let store = TestStore(
       initialState: AppReducer.State(todos: [todoA, todoB, todoC]),
       reducer: AppReducer.init
     )
