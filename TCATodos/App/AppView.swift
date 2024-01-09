@@ -24,6 +24,7 @@ struct AppView: View {
         .onMove { send(.todoMoved($0, $1), animation: .default) }
         .disabled(store.isEditingTodos)
       }
+      .alert($store.scope(state: \.alert, action: \.alert))
       .toolbar { toolbar(store: store) }
       .navigationTitle("Todos")
       .synchronize($store.focus, $focus)
@@ -70,6 +71,7 @@ extension AppView {
           } label: {
             Label("Delete Completed", systemImage: "trash")
           }
+          .disabled(store.disabledDeleteCompletedTodosButton)
         } label: {
           Image(systemName: "ellipsis.circle")
         }
@@ -86,7 +88,7 @@ extension AppView {
         } label: {
           Text("Delete")
         }
-        .disabled(store.selectedTodos.isEmpty)
+        .disabled(store.disabledDeleteSelectedTodosButton)
       }
       else {
         Text("\(store.todos.count) todos")

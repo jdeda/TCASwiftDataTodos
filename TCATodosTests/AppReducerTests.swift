@@ -214,6 +214,19 @@ final class AppReducerTests: XCTestCase {
     var store = TestStore(initialState: AppReducer.State(todos: [todoA, todoB, todoC]), reducer: AppReducer.init)
     
     await store.send(.view(.deleteCompletedTodosButtonTapped)) {
+      $0.alert = .deleteCompletedTodos
+    }
+    await store.send(.alert(.dismiss)) {
+      $0.alert = nil
+    }
+    
+    await store.send(.view(.deleteCompletedTodosButtonTapped)) {
+      $0.alert = .deleteCompletedTodos
+    }
+    
+    await store.send(.alert(.presented(.acceptDeleteCompletedTodosButtonTapped))) {
+      $0.alert = nil
+      $0.selectedTodos = []
       $0.todos = []
     }
     
@@ -227,6 +240,7 @@ final class AppReducerTests: XCTestCase {
     )
     await store.send(.view(.deleteCompletedTodosButtonTapped))
     
+    
     store = TestStore(
       initialState: AppReducer.State(todos: [
         .init(todo: .init(id: todoA.id, isComplete: false, description: todoA.todo.description)),
@@ -236,11 +250,16 @@ final class AppReducerTests: XCTestCase {
       reducer: AppReducer.init
     )
     await store.send(.view(.deleteCompletedTodosButtonTapped)) {
+      $0.alert = .deleteCompletedTodos
+    }
+    await store.send(.alert(.presented(.acceptDeleteCompletedTodosButtonTapped))) {
+      $0.alert = nil
+      $0.selectedTodos = []
       $0.todos.remove(id: todoB.id)
     }
   }
   
-  func testEditDeleteTodos() async {
+  func testDeleteSelectedTodos() async {
     let todoA = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "A"))
     let todoB = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "B"))
     let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C"))
@@ -252,6 +271,8 @@ final class AppReducerTests: XCTestCase {
     await store.send(.view(.editTodosButtonTapped)) {
       $0.isEditingTodos = true
     }
+    
+    await store.send(.view(.deleteSelectedTodosButtonTapped))
     
     await store.send(.view(.selectAllTodosButtonTapped)) {
       $0.selectedTodos = .init($0.todos.map(\.id))
@@ -274,6 +295,16 @@ final class AppReducerTests: XCTestCase {
     }
     
     await store.send(.view(.deleteSelectedTodosButtonTapped)) {
+      $0.alert = .deleteSelectedTodos
+    }
+    await store.send(.alert(.dismiss)) {
+      $0.alert = nil
+    }
+    await store.send(.view(.deleteSelectedTodosButtonTapped)) {
+      $0.alert = .deleteSelectedTodos
+    }
+    await store.send(.alert(.presented(.acceptDeleteSelectedTodosButtonTapped))) {
+      $0.alert = nil
       $0.todos.remove(id: todoA.id)
       $0.selectedTodos = []
     }

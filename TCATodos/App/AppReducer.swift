@@ -17,8 +17,18 @@ struct AppReducer {
       case todo(Todo.ID)
     }
     
+    @Presents var alert: AlertState<Action.AlertAction>?
+    
     var hasSelectedAll: Bool {
       self.selectedTodos.count == self.todos.count
+    }
+    
+    var disabledDeleteCompletedTodosButton: Bool {
+      !self.todos.contains(where: { $0.todo.isComplete })
+    }
+    
+    var disabledDeleteSelectedTodosButton: Bool {
+      self.selectedTodos.isEmpty
     }
   }
   
@@ -40,6 +50,11 @@ struct AppReducer {
     case sortTodos
     case todos(IdentifiedActionOf<TodoReducer>)
     case binding(BindingAction<State>)
+    case alert(PresentationAction<AlertAction>)
+    enum AlertAction: Equatable {
+      case acceptDeleteSelectedTodosButtonTapped
+      case acceptDeleteCompletedTodosButtonTapped
+    }
   }
   
   @Dependency(\.uuid) var uuid
@@ -77,7 +92,8 @@ struct AppReducer {
         return .none
         
       case .view(.deleteCompletedTodosButtonTapped):
-        state.todos = state.todos.filter { !$0.todo.isComplete }
+        guard !state.disabledDeleteCompletedTodosButton else { return .none }
+        state.alert = .deleteCompletedTodos
         return .none
         
       case .view(.editTodosButtonTapped):
@@ -95,8 +111,8 @@ struct AppReducer {
         return .none
         
       case .view(.deleteSelectedTodosButtonTapped):
-        state.todos = state.todos.filter { !state.selectedTodos.contains($0.id) }
-        state.selectedTodos = []
+        guard !state.disabledDeleteSelectedTodosButton else { return .none }
+        state.alert = .deleteSelectedTodos
         return .none
         
       case let .loadTodosSuccess(todos):
@@ -120,12 +136,53 @@ struct AppReducer {
         
       case .binding:
         return .none
+        
+      case let .alert(.presented(action)):
+        switch action {
+        case .acceptDeleteSelectedTodosButtonTapped:
+          state.todos = state.todos.filter { !state.selectedTodos.contains($0.id) }
+          state.selectedTodos = []
+          state.alert = nil
+          return .none
+          
+        case .acceptDeleteCompletedTodosButtonTapped:
+          state.todos = state.todos.filter { !$0.todo.isComplete }
+          state.alert = nil
+          return .none
+        }
+        
+      case .alert(.dismiss):
+        state.alert = nil
+        return .none
       }
     }
+    .ifLet(\.alert, action: \.alert) // TODO: ??? Needed????
     .forEach(\.todos, action: \.todos) {
       TodoReducer()
     }
   }
+}
+
+extension AlertState where Action == AppReducer.Action.AlertAction {
+  static let deleteSelectedTodos = Self(
+    title: { TextState(verbatim: "Delete Selected Todos")},
+    actions: {
+      ButtonState(role: .destructive, action: .send(.acceptDeleteSelectedTodosButtonTapped, animation: .default)) {
+        TextState(verbatim: "Confirm")
+      }
+    },
+    message: { TextState(verbatim: "Are you sure you want to delete the selected todos?")}
+  )
+  
+  static let deleteCompletedTodos = Self(
+    title: { TextState(verbatim: "Delete Completed Todos")},
+    actions: {
+      ButtonState(role: .destructive, action: .send(.acceptDeleteCompletedTodosButtonTapped, animation: .default)) {
+        TextState(verbatim: "Confirm")
+      }
+    },
+    message: { TextState(verbatim: "Are you sure you want to delete the completed todos?")}
+  )
 }
 
 
