@@ -79,28 +79,22 @@ struct AppReducer {
       case let .view(.todoSwipedToDelete(id)):
         let todo = state.todos[id: id]!
         state.todos.remove(id: id)
-        state.selectedTodos.remove(id)
-        return .run { _ in
+        return .run { send in
           await self.database.deleteTodo(todo.id)
         }
+        .concatenate(with: self.setTodosOrderIndicies(&state))
         
       case let .view(.todoMoved(source, destination)):
         state.todos.move(fromOffsets: source, toOffset: destination)
-        let todos = state.todos.map(\.todo)
-        return .run { _ in
-          for todo in todos {
-            await self.database.updateTodo(todo)
-          }
-        }
+        return self.setTodosOrderIndicies(&state)
         
       case .view(.addTodoButtonTapped):
-        let todo = Todo(id: .init(rawValue: uuid()))
+        let todo = Todo(id: .init(rawValue: uuid()), orderIndex: state.todos.count)
         state.todos.append(.init(todo: todo))
         state.focus = .todo(todo.id)
-        return .run { _ in
-          await self.database.createTodo(todo)
-        }
-        
+        return .run { _ in await self.database.createTodo(todo) }
+          .concatenate(with: self.setTodosOrderIndicies(&state))
+
       case .view(.deleteCompletedTodosButtonTapped):
         guard !state.disabledDeleteCompletedTodosButton else { return .none }
         state.alert = .deleteCompletedTodos
@@ -132,12 +126,7 @@ struct AppReducer {
         
       case .sortTodos:
         state.todos.sort { $1.todo.isComplete && !$0.todo.isComplete }
-        let todos = state.todos.map(\.todo)
-        return .run { _ in
-          for todo in todos {
-            await self.database.updateTodo(todo)
-          }
-        }
+        return self.setTodosOrderIndicies(&state)
         
       case let .todos(.element(id: id, action: .view(.isCompletedToggled))):
         let todo = state.todos[id: id]!.todo
@@ -150,9 +139,7 @@ struct AppReducer {
         
       case let .todos(.element(id: id, _)):
         let todo = state.todos[id: id]!.todo
-        return .run { _ in
-          await self.database.updateTodo(todo)
-        }
+        return .run { _ in await self.database.updateTodo(todo) }
         
       case .binding:
         return .none
@@ -165,20 +152,20 @@ struct AppReducer {
           state.selectedTodos = []
           state.alert = nil
           return .run { _ in
-            for id in ids {
-              await self.database.deleteTodo(id)
-            }
+            for id in ids { await self.database.deleteTodo(id) }
           }
+          .concatenate(with: self.setTodosOrderIndicies(&state))
+
           
         case .acceptDeleteCompletedTodosButtonTapped:
           let ids = state.todos.filter({ $0.todo.isComplete }).ids
           state.todos = state.todos.filter { !$0.todo.isComplete }
           state.alert = nil
           return .run { _ in
-            for id in ids {
-              await self.database.deleteTodo(id)
-            }
+            for id in ids { await self.database.deleteTodo(id) }
           }
+          .concatenate(with: self.setTodosOrderIndicies(&state))
+
         }
         
       case .alert(.dismiss):
@@ -189,6 +176,19 @@ struct AppReducer {
     .ifLet(\.alert, action: \.alert) // TODO: ??? Needed????
     .forEach(\.todos, action: \.todos) {
       TodoReducer()
+    }
+  }
+  
+  // Sets each Todo order index via ascending order then persists these updates.
+  func setTodosOrderIndicies(_ state: inout AppReducer.State) -> EffectOf<AppReducer> {
+    state.todos.ids.enumerated().forEach({ index, id in
+      state.todos[id: id]?.todo.orderIndex = index
+    })
+    let todos = state.todos.map(\.todo)
+    return .run { _ in
+      for todo in todos {
+        await self.database.updateTodo(todo)
+      }
     }
   }
 }
