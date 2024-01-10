@@ -184,8 +184,7 @@ struct AppReducer {
     state.todos.ids.enumerated().forEach({ index, id in
       state.todos[id: id]?.todo.orderIndex = index
     })
-    let todos = state.todos.map(\.todo)
-    return .run { _ in
+    return .run { [todos = state.todos.map(\.todo)] _ in
       for todo in todos {
         await self.database.updateTodo(todo)
       }
