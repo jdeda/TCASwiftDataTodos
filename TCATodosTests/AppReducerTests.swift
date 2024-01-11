@@ -5,6 +5,43 @@ import ComposableArchitecture
 @MainActor
 final class AppReducerTests: XCTestCase {
   
+  let todoA = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "A", orderIndex: 0))
+  let todoB = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "B", orderIndex: 1))
+  let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C", orderIndex: 2))
+
+  private func createTestStore(_ todos: [Todo]) async -> (Database, TestStoreOf<AppReducer>) {
+    let database: Database = {
+      var database = Database()
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      database.deleteTodo = { todoID in
+        await sdc.deleteTodo(todoID)
+      }
+      database.updateTodo = { todo in
+        await sdc.updateTodo(todo)
+      }
+      database.retrieveTodo = { todoID in
+        await sdc.retrieveTodo(todoID)
+      }
+      database.retrieveTodos = {
+        await sdc.retrieveAllTodos()
+      }
+      return database
+    }()
+    for todo in todos {
+      await database.createTodo(todo)
+    }
+    
+    let store = TestStore(
+      initialState: AppReducer.State(todos: [todoA, todoB, todoC]),
+      reducer: AppReducer.init
+    ) {
+      $0.database = database
+    }
+    
+    await XCTAssertTodosEqual(database, store.state)
+    return (database, store)
+  }
+  
   func testTask() async {
     let todoA = Todo(id: .init(), isComplete: true, description: "A")
     let todoB = Todo(id: .init(), isComplete: true, description: "B")
@@ -52,27 +89,71 @@ final class AppReducerTests: XCTestCase {
   }
   
   func testTodoSwipedToDelete() async {
-    let todoA = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "A"))
-    let todoB = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "B"))
-    let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C"))
+    
+    /// Simplify
+    /// 1. Create a global TestDatabase with default data.
+    /// 2. For every test you simply create a store with that DB, perform the .task, wait for it to finish, then assert equals everything happened,
+    /// then just run ur test
+    /// 3. Also have a helper function for tests XCTAssertTodosEqual
+    let database, store = self.createTestStore([todoA.todo, todoB.todo, todoC.todo])
+    let todoA = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "A", orderIndex: 0))
+    let todoB = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "B", orderIndex: 1))
+    let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C", orderIndex: 2))
+    let database: Database = {
+      var database = Database()
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      database.deleteTodo = { todoID in
+        await sdc.deleteTodo(todoID)
+      }
+      database.updateTodo = { todo in
+        await sdc.updateTodo(todo)
+      }
+      database.retrieveTodo = { todoID in
+        await sdc.retrieveTodo(todoID)
+      }
+      database.retrieveTodos = {
+        await sdc.retrieveAllTodos()
+      }
+      return database
+    }()
+    for todo in [todoA, todoB, todoC] {
+      await database.createTodo(todo.todo)
+    }
+    
     let store = TestStore(
       initialState: AppReducer.State(todos: [todoA, todoB, todoC]),
       reducer: AppReducer.init
-    )
+    ) {
+      $0.database = database
+    }
+    
+    await XCTAssertTodosEqual(database, store.state)
+
     
     await store.send(.view(.todoSwipedToDelete(todoA.id))) {
       $0.todos.remove(id: todoA.id)
+      $0.todos[id: todoB.id]?.todo.orderIndex = 0
+      $0.todos[id: todoC.id]?.todo.orderIndex = 1
     }
+    await store.finish(timeout: .seconds(1))
+    await XCTAssertTodosEqual(database, store.state)
+
     
     await store.send(.view(.todoSwipedToDelete(todoB.id))) {
       $0.todos.remove(id: todoB.id)
+      $0.todos[id: todoC.id]?.todo.orderIndex = 0
     }
+    await store.finish(timeout: .seconds(1))
+    await XCTAssertTodosEqual(database, store.state)
+
     
     await store.send(.view(.todoSwipedToDelete(todoB.id)))
     
     await store.send(.view(.todoSwipedToDelete(todoC.id))) {
       $0.todos = []
     }
+    await store.finish(timeout: .seconds(1))
+    await XCTAssertTodosEqual(database, store.state)
   }
   
   func testTodoMoved() async {
@@ -338,5 +419,10 @@ final class AppReducerTests: XCTestCase {
     await store.send(.view(.editTodosDoneButtonTapped)) {
       $0.isEditingTodos = false
     }
+  }
+  
+  private func XCTAssertTodosEqual(_ database: Database, _ state: AppReducer.State) async {
+    let fetchedTodos = await database.retrieveTodos()
+    XCTAssertEqual(fetchedTodos, state.todos.map(\.todo))
   }
 }

@@ -77,7 +77,7 @@ struct AppReducer {
         }
         
       case let .view(.todoSwipedToDelete(id)):
-        let todo = state.todos[id: id]!
+        guard let todo = state.todos[id: id] else { return .none }
         state.todos.remove(id: id)
         return .run { send in
           await self.database.deleteTodo(todo.id)
@@ -129,7 +129,7 @@ struct AppReducer {
         return self.setTodosOrderIndicies(&state)
         
       case let .todos(.element(id: id, action: .view(.isCompletedToggled))):
-        let todo = state.todos[id: id]!.todo
+        guard let todo = state.todos[id: id]?.todo else { return .none }
         return .run { send in
           await self.database.updateTodo(todo)
           try await self.clock.sleep(for: .seconds(1))
@@ -138,7 +138,7 @@ struct AppReducer {
         .cancellable(id: SortEffectID.cancel, cancelInFlight: true)
         
       case let .todos(.element(id: id, _)):
-        let todo = state.todos[id: id]!.todo
+        guard let todo = state.todos[id: id]?.todo else { return .none }
         return .run { _ in await self.database.updateTodo(todo) }
         
       case .binding:
