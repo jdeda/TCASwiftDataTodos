@@ -40,11 +40,7 @@ actor SDClient: ModelActor {
   // the database is empty and we have not already
   // successfully called this method.
   func initializeDatabase() {
-    guard !self.didInitStore else { return }
-    var fd = FetchDescriptor<SDTodo>()
-    fd.fetchLimit = 1
-    guard (try? self.modelContext.fetchCount(fd)) == 0 else { return }
-    let mockTodos: [Todo] = [
+    let todos: [Todo] = [
       Todo(id: .init(), isComplete: true, description: "Wakeup"),
       Todo(id: .init(), isComplete: false, description: "Homework"),
       Todo(id: .init(), isComplete: true, description: "Play Videogames"),
@@ -57,10 +53,22 @@ actor SDClient: ModelActor {
         todo.orderIndex = $0
         return todo
       })
-    mockTodos.forEach(self.createTodo)
+    self.initializeDatabase(todos)
+  }
+  
+  // Initializes database with given todos, assuming
+  // the database is empty and we have not already
+  // successfully called this method.
+  func initializeDatabase(_ todos: [Todo]) {
+    guard !self.didInitStore else { return }
+    var fd = FetchDescriptor<SDTodo>()
+    fd.fetchLimit = 1
+    guard (try? self.modelContext.fetchCount(fd)) == 0 else { return }
+    todos.forEach(self.createTodo)
     try! self.modelContext.save()
     self.didInitStore = true
   }
+  
   
   func retrieveAllTodos() -> [Todo] {
     var fd = FetchDescriptor<SDTodo>(sortBy: [SortDescriptor<SDTodo>(\.orderIndex)])
