@@ -23,6 +23,7 @@
 		97A414862B477BEF00EB5FC7 /* AppReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */; };
 		97A4148F2B488A9D00EB5FC7 /* TodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A4148E2B488A9D00EB5FC7 /* TodoView.swift */; };
 		97A414912B488AA100EB5FC7 /* TodoReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A414902B488AA100EB5FC7 /* TodoReducer.swift */; };
+		97CE70772B50B49100B5F666 /* SDClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CE70762B50B49100B5F666 /* SDClientTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducerTests.swift; sourceTree = "<group>"; };
 		97A4148E2B488A9D00EB5FC7 /* TodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoView.swift; sourceTree = "<group>"; };
 		97A414902B488AA100EB5FC7 /* TodoReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoReducer.swift; sourceTree = "<group>"; };
+		97CE70762B50B49100B5F666 /* SDClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 			children = (
 				97A414852B477BEF00EB5FC7 /* AppReducerTests.swift */,
 				9780EDDF2B4D9B5C0093376A /* TodoReducerTests.swift */,
+				97CE70762B50B49100B5F666 /* SDClientTests.swift */,
 			);
 			path = TCATodosTests;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97CE70772B50B49100B5F666 /* SDClientTests.swift in Sources */,
 				9780EDE02B4D9B5C0093376A /* TodoReducerTests.swift in Sources */,
 				97A414862B477BEF00EB5FC7 /* AppReducerTests.swift in Sources */,
 			);

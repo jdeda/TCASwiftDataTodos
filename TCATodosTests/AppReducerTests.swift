@@ -2,11 +2,16 @@ import XCTest
 @testable import TCATodos
 import ComposableArchitecture
 
+/// Tests AppReducer actions and integration tests with child Todo reducer.
+/// Tests are structured as:
+///   1. Create mock data
+///   2. Create test database and initialize with mock data
+///   3. Create test store and initialize with mock data
+///   4. Send store actions and assert state mutations, and always assert database and store have same todos
 @MainActor
 final class AppReducerTests: XCTestCase {
   
   func testTask() async {
-    // TODO: Database
     let todoA = Todo(id: .init(), isComplete: true, description: "A")
     let todoB = Todo(id: .init(), isComplete: true, description: "B")
     let todoC = Todo(id: .init(), isComplete: true, description: "C")
@@ -58,7 +63,7 @@ final class AppReducerTests: XCTestCase {
     let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C", orderIndex: 2))
     let database: Database = {
       var database = Database()
-      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))
       database.initializeDatabase =  {
         await sdc.initializeDatabase([todoA.todo, todoB.todo, todoC.todo])
       }
@@ -120,7 +125,7 @@ final class AppReducerTests: XCTestCase {
     let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C", orderIndex: 2))
     let database: Database = {
       var database = Database()
-      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))
       database.initializeDatabase =  {
         await sdc.initializeDatabase([todoA.todo, todoB.todo, todoC.todo])
       }
@@ -163,7 +168,7 @@ final class AppReducerTests: XCTestCase {
     let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C", orderIndex: 2))
     let database: Database = {
       var database = Database()
-      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))
       database.initializeDatabase =  {
         await sdc.initializeDatabase([todoA.todo, todoB.todo, todoC.todo])
       }
@@ -231,7 +236,7 @@ final class AppReducerTests: XCTestCase {
     let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: false, description: "C", orderIndex: 2))
     let database: Database = {
       var database = Database()
-      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))
       database.initializeDatabase =  {
         await sdc.initializeDatabase([todoA.todo, todoB.todo, todoC.todo])
       }
@@ -285,7 +290,7 @@ final class AppReducerTests: XCTestCase {
     let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: false, description: "C", orderIndex: 2))
     let database: Database = {
       var database = Database()
-      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))
       database.initializeDatabase =  {
         await sdc.initializeDatabase([todoA.todo, todoB.todo, todoC.todo])
       }
@@ -310,13 +315,11 @@ final class AppReducerTests: XCTestCase {
     }
     await XCTAssertTodosEqual(database, store.state)
     
-    
     await store.send(.todos(.element(id: todoA.id, action: .binding(.set(\.todo.description, "AAA"))))) {
       $0.todos[id: todoA.id]?.todo.description = "AAA"
     }
     await store.finish(timeout: .milliseconds(1))
     await XCTAssertTodosEqual(database, store.state)
-    
     
     await store.send(.todos(.element(id: todoB.id, action: .binding(.set(\.todo.description, "BBB"))))) {
       $0.todos[id: todoB.id]?.todo.description = "BBB"
@@ -350,7 +353,7 @@ final class AppReducerTests: XCTestCase {
   func testAddTodoButtonTapped() async {
     let database: Database = {
       var database = Database()
-      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))
       database.createTodo = { todo in
         await sdc.createTodo(todo)
       }
@@ -403,7 +406,7 @@ final class AppReducerTests: XCTestCase {
     let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C", orderIndex: 2))
     let database: Database = {
       var database = Database()
-      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))
       database.initializeDatabase = {
         await sdc.initializeDatabase([todoA.todo, todoB.todo, todoC.todo])
       }
@@ -461,7 +464,7 @@ final class AppReducerTests: XCTestCase {
     let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: false, description: "C", orderIndex: 2))
     let database: Database = {
       var database = Database()
-      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))
       database.initializeDatabase = {
         await sdc.initializeDatabase([todoA.todo, todoB.todo, todoC.todo])
       }
@@ -497,7 +500,7 @@ final class AppReducerTests: XCTestCase {
 
     let database: Database = {
       var database = Database()
-      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))
       database.initializeDatabase = {
         await sdc.initializeDatabase([todoA.todo, todoB.todo, todoC.todo])
       }
@@ -544,7 +547,7 @@ final class AppReducerTests: XCTestCase {
     let todoC = TodoReducer.State(todo: Todo(id: .init(), isComplete: true, description: "C"))
     let database: Database = {
       var database = Database()
-      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))!
+      let sdc = SDClient(URL(fileURLWithPath: "dev/null"))
       database.initializeDatabase = {
         await sdc.initializeDatabase([todoA.todo, todoB.todo, todoC.todo])
       }
@@ -703,5 +706,4 @@ final class AppReducerTests: XCTestCase {
   }
 }
 
-// TODO: Make a function that creates the DB for you it is used evereywhere
 // TODO: Make something built into the assert that automatically asserts DB is in sync!

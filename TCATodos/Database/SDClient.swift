@@ -10,9 +10,8 @@ actor SDClient: ModelActor {
   let modelExecutor: ModelExecutor
   private(set) var didInitStore: Bool
   
-  init?() {
-    guard let modelContainer = try? ModelContainer(for: SDTodo.self)
-    else { return nil }
+  init() {
+    let modelContainer = try! ModelContainer(for: SDTodo.self)
     self.modelContainer = modelContainer
     let context = ModelContext(modelContainer)
     context.autosaveEnabled = false
@@ -20,40 +19,13 @@ actor SDClient: ModelActor {
     self.didInitStore = false
   }
   
-  init?(_ url: URL) {
-    guard let container = try? ModelContainer(for: SDTodo.self, configurations: .init(url: url))
-    else { return nil }
+  init(_ url: URL) {
+    let container = try! ModelContainer(for: SDTodo.self, configurations: .init(url: url))
     self.modelContainer = container
     let context = ModelContext(container)
     context.autosaveEnabled = false
     self.modelExecutor = DefaultSerialModelExecutor(modelContext: context)
     self.didInitStore = false
-  }
-  
-  enum SDError: Equatable, Error {
-    case failure
-    case notFound
-    case duplicate
-  }
-  
-  // Initializes database with default data, assuming
-  // the database is empty and we have not already
-  // successfully called this method.
-  func initializeDatabase() {
-    let todos: [Todo] = [
-      Todo(id: .init(), isComplete: true, description: "Wakeup"),
-      Todo(id: .init(), isComplete: false, description: "Homework"),
-      Todo(id: .init(), isComplete: true, description: "Play Videogames"),
-      Todo(id: .init(), isComplete: true, description: "Do Keto"),
-      Todo(id: .init(), isComplete: false, description: "Go to Bed")
-    ]
-      .enumerated()
-      .map({
-        var todo = $1
-        todo.orderIndex = $0
-        return todo
-      })
-    self.initializeDatabase(todos)
   }
   
   // Initializes database with given todos, assuming
@@ -68,7 +40,6 @@ actor SDClient: ModelActor {
     try! self.modelContext.save()
     self.didInitStore = true
   }
-  
   
   func retrieveAllTodos() -> [Todo] {
     var fd = FetchDescriptor<SDTodo>(sortBy: [SortDescriptor<SDTodo>(\.orderIndex)])
